@@ -4176,8 +4176,9 @@ html[data-theme="dark"] #notificationDrawer {
   }
 
   .tab-indicator {
-    transition: transform .18s cubic-bezier(.22, 1, .36, 1) !important;
+    transition: transform .38s cubic-bezier(.3, 1.34, .46, 1) !important;
     transform: translateZ(0);
+    transform-origin: center;
     will-change: transform;
     backface-visibility: hidden;
   }
@@ -4790,6 +4791,9 @@ let chatSwipeTriggered = false;
 let chatTouchSwipeStart = null;
 let tabIndicatorMetrics = null;
 let tabIndicatorMeasureFrame = 0;
+let tabIndicatorAnimationTimer = 0;
+let tabIndicatorAnimationFrame = 0;
+let tabIndicatorAnimationToken = 0;
 
 function loadStored(key, fallback) {
   try {
@@ -4841,6 +4845,7 @@ function showToast(text) {
 function showView(viewName) {
   const nextView = $(`#${viewName}View`);
   if (!nextView || nextView.classList.contains("active")) return;
+  const previousView = document.body.dataset.view;
 
   if (chatPage.classList.contains("open") || chatPage.classList.contains("closing")) closeChat();
   if ($(".drawer.open") || $("#drawerScrim").classList.contains("show")) closeDrawers();
@@ -4849,7 +4854,7 @@ function showView(viewName) {
   $$(".view").forEach((view) => view.classList.remove("active"));
   nextView.classList.add("active");
   $$(".nav-item").forEach((item) => item.classList.toggle("active", item.dataset.view === viewName));
-  placeTabIndicator();
+  animateTabIndicator(previousView, viewName);
 }
 
 function measureTabIndicator() {
@@ -4866,27 +4871,85 @@ function measureTabIndicator() {
     return [
       button.dataset.view,
       {
-        width: `${width}px`,
-        transform: `translate3d(${rect.left + rect.width / 2 - barRect.left - bar.clientLeft - width / 2}px, 0, 0)`
+        offset: rect.left + rect.width / 2 - barRect.left - bar.clientLeft - width / 2,
+        width
       }
     ];
   }));
 }
 
-function placeTabIndicator() {
+function paintTabIndicator(metric, stretch = false, direction = 1) {
   const bar = $(".bottom-nav");
   const indicator = $(".tab-indicator", bar);
-  const buttons = $$(".tab-btn", bar);
-  if (!bar || !indicator || !buttons.length) return;
+  if (!bar || !indicator || !metric) return;
+  const stretchBy = stretch ? metric.width * .12 : 0;
+  const offset = metric.offset + stretch * direction * stretchBy / 2;
+  indicator.style.transformOrigin = "center";
+  indicator.style.width = `${metric.width}px`;
+  indicator.style.transform = `translate3d(${offset}px, 0, 0) scaleX(${(metric.width + stretchBy) / metric.width})`;
+}
+
+function activeTabIndicatorMetric() {
+  const buttons = $$(".tab-btn", $(".bottom-nav"));
   const active = buttons.find((button) => button.classList.contains("active")) || buttons[0];
+  return active ? tabIndicatorMetrics?.get(active.dataset.view) : null;
+}
+
+function placeTabIndicator() {
+  const bar = $(".bottom-nav");
+  const buttons = $$(".tab-btn", bar);
+  if (!buttons.length) return;
   if (!tabIndicatorMetrics) measureTabIndicator();
-  const metric = tabIndicatorMetrics?.get(active.dataset.view);
+  const metric = activeTabIndicatorMetric();
   if (!metric) return;
-  if (indicator.style.width !== metric.width) indicator.style.width = metric.width;
-  indicator.style.transform = metric.transform;
+  const indicator = $(".tab-indicator", $(".bottom-nav"));
+  if (!indicator) return;
+  indicator.style.transition = "none";
+  paintTabIndicator(metric);
+  requestAnimationFrame(() => {
+    indicator.style.transition = "";
+  });
+}
+
+function animateTabIndicator(fromView, toView) {
+  if (!tabIndicatorMetrics) measureTabIndicator();
+  const from = tabIndicatorMetrics?.get(fromView);
+  const to = tabIndicatorMetrics?.get(toView);
+  const indicator = $(".tab-indicator", $(".bottom-nav"));
+  if (!from || !to || !indicator || fromView === toView) {
+    placeTabIndicator();
+    return;
+  }
+
+  const token = ++tabIndicatorAnimationToken;
+  const direction = to.offset >= from.offset ? 1 : -1;
+  cancelAnimationFrame(tabIndicatorAnimationFrame);
+  clearTimeout(tabIndicatorAnimationTimer);
+  indicator.style.transition = "none";
+  paintTabIndicator(from);
+
+  tabIndicatorAnimationFrame = requestAnimationFrame(() => {
+    if (token !== tabIndicatorAnimationToken) return;
+    tabIndicatorAnimationFrame = requestAnimationFrame(() => {
+      if (token !== tabIndicatorAnimationToken) return;
+      indicator.style.transition = "transform .38s cubic-bezier(.3, 1.34, .46, 1)";
+      paintTabIndicator(to, true, direction);
+      tabIndicatorAnimationTimer = setTimeout(() => {
+        if (token !== tabIndicatorAnimationToken) return;
+        paintTabIndicator(to);
+        tabIndicatorAnimationTimer = setTimeout(() => {
+          if (token !== tabIndicatorAnimationToken) return;
+          indicator.style.transition = "";
+        }, 410);
+      }, 170);
+    });
+  });
 }
 
 function scheduleTabIndicatorMeasure() {
+  tabIndicatorAnimationToken += 1;
+  cancelAnimationFrame(tabIndicatorAnimationFrame);
+  clearTimeout(tabIndicatorAnimationTimer);
   cancelAnimationFrame(tabIndicatorMeasureFrame);
   tabIndicatorMeasureFrame = requestAnimationFrame(() => {
     measureTabIndicator();
