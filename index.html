@@ -3004,10 +3004,11 @@ html[data-theme="dark"] .publish-btn {
 .message > .bubble-wrap {
   transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .22s ease, filter .28s ease;
   transform-origin: center;
-  will-change: transform;
+  will-change: auto;
 }
 
 .message.message-pressing > .bubble-wrap {
+  will-change: transform;
   transform: scale(1.035);
   opacity: 1;
   filter: brightness(1.05);
@@ -3018,6 +3019,7 @@ html[data-theme="dark"] .publish-btn {
 }
 
 .message.context-target > .bubble-wrap {
+  will-change: transform;
   transform: scale(1.035);
 }
 
@@ -5808,6 +5810,107 @@ html[data-theme="light"] .settings-appearance .theme-switch {
   }
 }
 
+@media (max-width: 560px) {
+  .message-action-scrim,
+  .message-reaction-bar,
+  .message-context-menu,
+  .message-action-cluster {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+html[data-theme="light"] .profile-editor-sheet {
+  background: #f4f5f7;
+  color: #1f2227;
+}
+
+html[data-theme="light"] .profile-editor-topbar button {
+  border-color: rgba(35, 43, 55, .08);
+  background: #fff;
+  color: #30343b;
+}
+
+html[data-theme="light"] .profile-editor-topbar #saveProfileEditor {
+  border-color: rgba(61, 140, 255, .28);
+  background: #3d8cff;
+  color: #fff;
+}
+
+html[data-theme="light"] .profile-avatar-camera {
+  background:
+    radial-gradient(circle at 50% 42%, rgba(56, 99, 170, .16), transparent 58%),
+    #e7ebf1;
+}
+
+html[data-theme="light"] .profile-editor-card {
+  border: 1px solid rgba(35, 43, 55, .05);
+  background: #fff;
+  box-shadow: 0 7px 22px rgba(35, 43, 55, .04);
+}
+
+html[data-theme="light"] .profile-name-fields label + label,
+html[data-theme="light"] .profile-editor-menu > button + button::before {
+  background: rgba(35, 43, 55, .08);
+}
+
+html[data-theme="light"] .profile-name-fields input,
+html[data-theme="light"] .profile-bio-field textarea,
+html[data-theme="light"] .profile-editor-row input {
+  color: #262b32;
+}
+
+html[data-theme="light"] .profile-name-fields input::placeholder,
+html[data-theme="light"] .profile-bio-field textarea::placeholder {
+  color: #8c929b;
+}
+
+html[data-theme="light"] .profile-editor-hint {
+  color: #858c95;
+}
+
+html[data-theme="light"] .profile-editor-row strong,
+html[data-theme="light"] .profile-editor-menu strong,
+html[data-theme="light"] .profile-editor-menu > button {
+  color: #24282e;
+}
+
+html[data-theme="light"] .profile-editor-row input,
+html[data-theme="light"] .profile-editor-menu [id$="Value"] {
+  color: #7e858e;
+}
+
+html[data-theme="light"] .profile-color-panel {
+  border-color: rgba(35, 43, 55, .08);
+  background: #fff;
+  color: #1f2227;
+}
+
+html[data-theme="light"] .profile-color-panel h3,
+html[data-theme="light"] .profile-custom-color {
+  color: #24282e;
+}
+
+html[data-theme="light"] .profile-color-panel header p {
+  color: #858c95;
+}
+
+html[data-theme="light"] .profile-color-panel header button {
+  border-color: rgba(35, 43, 55, .08);
+  background: #f0f2f5;
+  color: #3a3f46;
+}
+
+html[data-theme="light"] .profile-custom-color {
+  background: #f0f2f5;
+}
+
+html[data-theme="light"] .profile-color-swatches button.active {
+  box-shadow:
+    0 0 0 2px #fff,
+    0 0 0 4px rgba(42, 50, 62, .32);
+}
+
   </style>
 </head>
 <body data-view="forum">
@@ -5951,7 +6054,7 @@ html[data-theme="light"] .settings-appearance .theme-switch {
           <div><strong>外观</strong><span>浅色或黑夜模式</span></div>
           <div class="theme-switch" role="group" aria-label="选择主题">
             <button type="button" data-theme-choice="light">浅色</button>
-            <button type="button" data-theme-choice="dark">黑夜</button>
+            <button type="button" data-theme-choice="dark">深色</button>
           </div>
         </section>
       </section>
@@ -7903,7 +8006,9 @@ messageList.addEventListener("pointerdown", (event) => {
   clearTimeout(messagePressTimer);
   pressedMessageElement = messageElement;
   messagePressStart = { x: event.clientX, y: event.clientY };
-  messageElement.classList.add("message-pressing");
+  requestAnimationFrame(() => {
+    if (pressedMessageElement === messageElement) messageElement.classList.add("message-pressing");
+  });
   const messageId = messageElement.dataset.messageId;
   messagePressTimer = setTimeout(() => {
     messagePressTimer = null;
@@ -7913,7 +8018,7 @@ messageList.addEventListener("pointerdown", (event) => {
     suppressMessageClickUntil = Date.now() + 700;
     navigator.vibrate?.(12);
     openMessageActions(messageId, messageElement);
-  }, 480);
+  }, 400);
 });
 
 document.addEventListener("pointermove", (event) => {
@@ -7990,6 +8095,12 @@ messageActionLayer.addEventListener("click", (event) => {
   }
   const action = event.target.closest("[data-message-action]");
   if (action) handleMessageAction(action.dataset.messageAction);
+});
+
+messageActionLayer.addEventListener("pointerup", (event) => {
+  if (event.target.closest("[data-close-message-actions]")) {
+    closeMessageActions();
+  }
 });
 
 $("#messageReactionMore").addEventListener("click", () => showToast("更多表情会继续补充"));
