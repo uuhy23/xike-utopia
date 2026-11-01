@@ -3002,17 +3002,23 @@ html[data-theme="dark"] .publish-btn {
 }
 
 .message > .bubble-wrap {
-  transition: transform .18s cubic-bezier(.22, 1, .36, 1), opacity .18s ease;
+  transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .22s ease, filter .28s ease;
+  transform-origin: center;
+  will-change: transform;
 }
 
 .message.message-pressing > .bubble-wrap {
-  transform: scale(.985);
-  opacity: .88;
+  transform: scale(1.035);
+  opacity: 1;
+  filter: brightness(1.05);
 }
 
 .message.context-target .bubble {
-  outline: 2px solid rgba(70, 153, 242, .72);
-  outline-offset: 2px;
+  outline: none;
+}
+
+.message.context-target > .bubble-wrap {
+  transform: scale(1.035);
 }
 
 .bubble {
@@ -3324,30 +3330,23 @@ html[data-theme="dark"] .publish-btn {
 }
 
 .message.selected-for-action .bubble {
-  outline: 2px solid #4b98ea;
-  outline-offset: 2px;
+  outline: none;
 }
 
 .message.selected-for-action::after {
-  content: "✓";
-  position: absolute;
-  top: -6px;
-  left: -6px;
-  display: grid;
-  place-items: center;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: #3989e8;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 800;
+  display: none;
 }
 
 .message.selected-for-action.mine::after {
-  right: -6px;
-  left: auto;
+  display: none;
+}
+
+.message.selected-for-action > .bubble-wrap {
+  transform: scale(1.025);
+}
+
+.chat-page.message-selecting .message:not(.selected-for-action)::before {
+  display: none;
 }
 
 /* Multi-select: controls stay in the left gutter while message content aligns right. */
@@ -4268,7 +4267,8 @@ html[data-theme="dark"] #notificationDrawer {
   grid-column: 2;
   justify-self: center;
   justify-content: center;
-  width: min(100%, 270px);
+  width: fit-content;
+  max-width: 100%;
   min-height: 46px;
   padding: 7px 18px;
   border: 1px solid rgba(255, 255, 255, .12);
@@ -4289,7 +4289,7 @@ html[data-theme="dark"] #notificationDrawer {
 }
 
 .chat-title-copy strong {
-  max-width: 220px;
+  max-width: none;
   color: #f7f8fa;
   font-size: 15px;
   font-weight: 650;
@@ -4511,7 +4511,9 @@ html[data-theme="dark"] #notificationDrawer {
 }
 
 .chat-composer {
+  align-items: center;
   gap: 7px;
+  min-height: 58px;
   margin: 8px 12px calc(10px + env(safe-area-inset-bottom, 0px));
   padding: 8px;
   border: 1px solid rgba(255, 255, 255, .13);
@@ -4525,6 +4527,8 @@ html[data-theme="dark"] #notificationDrawer {
 }
 
 .compose-toolbar {
+  align-items: center;
+  align-self: center;
   gap: 3px;
   padding: 0;
 }
@@ -4548,7 +4552,7 @@ html[data-theme="dark"] #notificationDrawer {
 
 .message-field {
   min-height: 40px;
-  padding: 8px 13px;
+  padding: 0 13px;
   border: 1px solid rgba(255, 255, 255, .08);
   border-radius: 999px;
   background: rgba(9, 10, 13, .62);
@@ -4563,6 +4567,8 @@ html[data-theme="dark"] #notificationDrawer {
 .message-field textarea {
   color: #f2f3f5;
   font-size: 15px;
+  line-height: 1.35;
+  padding: 0;
 }
 
 .message-field textarea::placeholder {
@@ -4574,6 +4580,7 @@ html[data-theme="dark"] #notificationDrawer {
   place-items: center;
   width: 42px;
   height: 42px;
+  flex: 0 0 42px;
   padding: 0;
   border-color: rgba(144, 196, 255, .4);
   background: linear-gradient(145deg, #559ff3, #327fe5);
@@ -4719,6 +4726,166 @@ html[data-theme="light"] .system-message {
   }
 }
 
+/* Collapsible, stacked pinned messages. */
+.pinned-bar {
+  display: block;
+  min-height: 0;
+  margin: 0 14px 8px;
+  padding: 6px 8px;
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 22px;
+  background: rgba(28, 29, 33, .78);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .1),
+    0 10px 28px rgba(0, 0, 0, .2);
+  backdrop-filter: blur(24px) saturate(145%);
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+}
+
+.pinned-summary {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 8px;
+  min-height: 34px;
+  padding: 4px 8px 4px 3px;
+  border: 0;
+  background: transparent;
+  color: #f4f5f7;
+  text-align: left;
+}
+
+.pinned-icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  border-radius: 9px;
+  background: linear-gradient(145deg, #4199ef, #246bd5);
+  color: #fff;
+  font-size: 14px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .28);
+}
+
+.pinned-lead-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pinned-lead-copy strong {
+  color: #f4f5f7;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.pinned-lead-copy small {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #9298a1;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pinned-count {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .08);
+  color: #aeb4bd;
+  font-size: 10px;
+}
+
+.pinned-chevron {
+  color: #8f96a0;
+  font-size: 15px;
+  transition: transform .22s ease;
+}
+
+.pinned-bar.open .pinned-chevron {
+  transform: rotate(180deg);
+}
+
+.pinned-stack {
+  display: none;
+  gap: 6px;
+  padding: 8px 2px 2px;
+  border-top: 1px solid rgba(255, 255, 255, .1);
+}
+
+.pinned-bar.open .pinned-stack {
+  display: grid;
+}
+
+.pinned-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(60, 132, 226, .92), rgba(42, 104, 204, .88));
+  color: #fff;
+}
+
+.pinned-item > span {
+  flex: 0 0 auto;
+  font-size: 14px;
+}
+
+.pinned-item p {
+  margin: 0;
+  overflow: hidden;
+  color: #fff;
+  font-size: 10px;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+html[data-theme="light"] .pinned-bar {
+  border-color: rgba(255, 255, 255, .74);
+  background: rgba(255, 255, 255, .68);
+  color: #20232a;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .92),
+    0 10px 28px rgba(42, 54, 72, .1);
+}
+
+html[data-theme="light"] .pinned-summary,
+html[data-theme="light"] .pinned-lead-copy strong {
+  color: #252931;
+}
+
+html[data-theme="light"] .pinned-lead-copy small,
+html[data-theme="light"] .pinned-chevron {
+  color: #767d88;
+}
+
+html[data-theme="light"] .pinned-count {
+  background: rgba(37, 41, 49, .07);
+  color: #6b727d;
+}
+
+html[data-theme="light"] .pinned-stack {
+  border-top-color: rgba(42, 48, 58, .1);
+}
+
+@media (max-width: 560px) {
+  .pinned-bar {
+    margin-right: 10px;
+    margin-left: 10px;
+    border-radius: 20px;
+  }
+}
+
   </style>
 </head>
 <body data-view="forum">
@@ -4838,15 +5005,14 @@ html[data-theme="light"] .system-message {
       <button type="button" class="chat-avatar" id="chatAvatar" aria-label="群聊信息">✦</button>
       <button class="header-icon chat-more-button" id="chatMoreBtn" aria-label="更多" hidden>⋯</button>
     </header>
-    <div class="pinned-bar">
-      <div class="pinned-lead">
+    <div class="pinned-bar" id="pinnedBar">
+      <button class="pinned-summary" id="pinnedToggle" type="button" aria-expanded="false" aria-controls="pinnedStack">
         <span class="pinned-icon" aria-hidden="true">◈</span>
         <span class="pinned-lead-copy"><strong>置顶消息</strong><small id="pinnedGroupName">校园论坛</small></span>
-      </div>
-      <div class="pinned-content">
-        <span aria-hidden="true">★</span>
-        <p id="pinnedText"></p>
-      </div>
+        <span class="pinned-count" id="pinnedCount">1</span>
+        <span class="pinned-chevron" aria-hidden="true">⌄</span>
+      </button>
+      <div class="pinned-stack" id="pinnedStack" hidden></div>
     </div>
     <div class="chat-wallpaper"><div class="message-list" id="messageList"></div></div>
     <div class="mention-popover" id="mentionPopover"></div>
@@ -5332,6 +5498,7 @@ let tabIndicatorAnimationToken = 0;
 let navPointerState = null;
 let navSuppressClickUntil = 0;
 let navDragMetric = null;
+const currentUserIsPinnedManager = false;
 
 function loadStored(key, fallback) {
   try {
@@ -5828,8 +5995,7 @@ function openChat(groupId, focusMessageId = null) {
   $("#chatAvatar").style.background = group.color;
   $("#chatName").textContent = group.name;
   $("#chatStatus").textContent = `${group.members} 位成员 · ${mutedGroups.has(group.id) ? "已静音" : "在线"}`;
-  $("#pinnedText").textContent = group.pinned;
-  $("#pinnedGroupName").textContent = group.name;
+  renderPinnedBar(group);
   mentionPopover.innerHTML = group.mentions.map((item) => `<button data-mention="${item}">${item}</button>`).join("");
   mentionPopover.classList.remove("open");
   renderMessages(group);
@@ -5846,6 +6012,36 @@ function openChat(groupId, focusMessageId = null) {
       });
     });
   }
+}
+
+function getPinnedList(group) {
+  const extra = {
+    general: "晚自习教室 215 开放到 22:30",
+    dorm: "宿舍 410 空调已报修，预计下午处理",
+    teaching: "高数复习资料已上传班级共享盘"
+  };
+  const base = Array.isArray(group.pins)
+    ? group.pins.filter(Boolean)
+    : Array.isArray(group.pinned)
+      ? group.pinned.filter(Boolean)
+      : group.pinned ? [group.pinned] : [];
+  if (extra[group.id] && !base.includes(extra[group.id])) base.push(extra[group.id]);
+  return base;
+}
+
+function renderPinnedBar(group) {
+  const pinnedList = getPinnedList(group);
+  $("#pinnedGroupName").textContent = group.name;
+  $("#pinnedCount").textContent = pinnedList.length;
+  $("#pinnedStack").innerHTML = pinnedList.map((text) =>
+    `<div class="pinned-item"><span aria-hidden="true">★</span><p>${escapeHtml(text)}</p></div>`
+  ).join("");
+  const bar = $("#pinnedBar");
+  const toggle = $("#pinnedToggle");
+  bar.classList.remove("open");
+  $("#pinnedStack").hidden = true;
+  toggle.setAttribute("aria-expanded", "false");
+  bar.classList.toggle("manager", currentUserIsPinnedManager);
 }
 
 function finishCloseChat() {
@@ -6582,6 +6778,13 @@ $("#chatInfoBtn").addEventListener("click", () => {
 });
 $("#chatAvatar").addEventListener("click", () => $("#chatInfoBtn").click());
 $("#chatMoreBtn").addEventListener("click", () => $("#chatInfoBtn").click());
+$("#pinnedToggle").addEventListener("click", () => {
+  const bar = $("#pinnedBar");
+  const stack = $("#pinnedStack");
+  const expanded = bar.classList.toggle("open");
+  stack.hidden = !expanded;
+  $("#pinnedToggle").setAttribute("aria-expanded", String(expanded));
+});
 function toggleGroupMute() {
   const group = groups.find((item) => item.id === activeGroupId);
   if (!group) return;
