@@ -39,6 +39,16 @@ body {
     #e9edf2;
   font-family: "Segoe UI", "Microsoft YaHei", system-ui, -apple-system, sans-serif;
   font-size: 14px;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+input,
+textarea,
+[contenteditable="true"] {
+  -webkit-user-select: text;
+  user-select: text;
 }
 
 button, input, textarea { font: inherit; }
@@ -4172,7 +4182,14 @@ html[data-theme="dark"] #notificationDrawer {
   .bottom-nav,
   .bottom-nav.glass {
     isolation: isolate;
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
     transform: translate3d(-50%, 0, 0);
+  }
+
+  .bottom-nav .nav-item.tab-btn.near {
+    color: var(--nav-active-color);
   }
 
   .tab-indicator {
@@ -4794,6 +4811,9 @@ let tabIndicatorMeasureFrame = 0;
 let tabIndicatorAnimationTimer = 0;
 let tabIndicatorAnimationFrame = 0;
 let tabIndicatorAnimationToken = 0;
+let navPointerState = null;
+let navSuppressClickUntil = 0;
+let navDragMetric = null;
 
 function loadStored(key, fallback) {
   try {
@@ -4854,7 +4874,9 @@ function showView(viewName) {
   $$(".view").forEach((view) => view.classList.remove("active"));
   nextView.classList.add("active");
   $$(".nav-item").forEach((item) => item.classList.toggle("active", item.dataset.view === viewName));
-  animateTabIndicator(previousView, viewName);
+  const dragFrom = navDragMetric;
+  navDragMetric = null;
+  animateTabIndicator(previousView, viewName, dragFrom);
 }
 
 function measureTabIndicator() {
@@ -4911,12 +4933,20 @@ function placeTabIndicator() {
   });
 }
 
-function animateTabIndicator(fromView, toView) {
+function animateTabIndicator(fromView, toView, fromOverride = null) {
   if (!tabIndicatorMetrics) measureTabIndicator();
-  const from = tabIndicatorMetrics?.get(fromView);
+  const from = fromOverride || tabIndicatorMetrics?.get(fromView);
   const to = tabIndicatorMetrics?.get(toView);
+  if (!from || !to || from.offset === to.offset) {
+    placeTabIndicator();
+    return;
+  }
+  animateTabIndicatorBetween(from, to);
+}
+
+function animateTabIndicatorBetween(from, to) {
   const indicator = $(".tab-indicator", $(".bottom-nav"));
-  if (!from || !to || !indicator || fromView === toView) {
+  if (!indicator) {
     placeTabIndicator();
     return;
   }
@@ -4954,6 +4984,122 @@ function scheduleTabIndicatorMeasure() {
   tabIndicatorMeasureFrame = requestAnimationFrame(() => {
     measureTabIndicator();
     placeTabIndicator();
+  });
+}
+
+function setupBottomNav() {
+  const bar = $(".bottom-nav");
+  const indicator = $(".tab-indicator", bar);
+  const buttons = $$(".tab-btn", bar);
+  if (!bar || !indicator || buttons.length < 2) return;
+
+  const metricList = () => {
+    if (!tabIndicatorMetrics) measureTabIndicator();
+    return buttons.map((button) => tabIndicatorMetrics?.get(button.dataset.view)).filter(Boolean);
+  };
+  const metricFor = (view) => tabIndicatorMetrics?.get(view) || metricList()[0];
+  const currentMetric = () => metricFor(document.body.dataset.view) || metricList()[0];
+  const maxOffset = () => Math.max(0, bar.clientWidth - (metricList()[0]?.width || 0));
+  const clampOffset = (value) => Math.min(maxOffset(), Math.max(0, value));
+
+  function nearestIndex(offset, width) {
+    const center = offset + width / 2;
+    let best = 0;
+    let distance = Infinity;
+    metricList().forEach((metric, index) => {
+      const metricCenter = metric.offset + metric.width / 2;
+      const delta = Math.abs(metricCenter - center);
+      if (delta < distance) {
+        distance = delta;
+        best = index;
+      }
+    });
+    return best;
+  }
+
+  function indexAtX(x) {
+    const metrics = metricList();
+    for (let index = 0; index < metrics.length; index++) {
+      const metric = metrics[index];
+      if (x >= metric.offset && x <= metric.offset + metric.width) return index;
+    }
+    return nearestIndex(clampOffset(x - (metrics[0]?.width || 0) / 2), metrics[0]?.width || 0);
+  }
+
+  function paintDrag(metric) {
+    indicator.style.width = `${metric.width}px`;
+    indicator.style.transform = `translate3d(${metric.offset}px, 0, 0) scaleX(1)`;
+  }
+
+  function endNavDrag(event) {
+    const state = navPointerState;
+    if (!state) return;
+    navPointerState = null;
+    if (bar.hasPointerCapture?.(event.pointerId)) {
+      try { bar.releasePointerCapture(event.pointerId); } catch {}
+    }
+    indicator.style.transition = "";
+    buttons.forEach((button) => button.classList.remove("near"));
+
+    if (!state.moved) {
+      const x = event.clientX - bar.getBoundingClientRect().left - bar.clientLeft;
+      const index = indexAtX(x);
+      const view = buttons[index]?.dataset.view;
+      navSuppressClickUntil = Date.now() + 400;
+      if (view && view !== document.body.dataset.view) showView(view);
+      else placeTabIndicator();
+      return;
+    }
+
+    const width = metricList()[0].width;
+    const offset = clampOffset(state.startOffset + event.clientX - state.startX);
+    const index = nearestIndex(offset, width);
+    const target = metricFor(buttons[index]?.dataset.view);
+    navSuppressClickUntil = Date.now() + 500;
+    if (buttons[index]?.dataset.view === document.body.dataset.view) {
+      animateTabIndicatorBetween({ offset, width }, target);
+    } else {
+      navDragMetric = { offset, width };
+      showView(buttons[index].dataset.view);
+    }
+  }
+
+  bar.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0 || navPointerState) return;
+    navPointerState = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startOffset: currentMetric().offset,
+      moved: false
+    };
+    indicator.style.transition = "none";
+    indicator.style.transformOrigin = "center";
+    if (bar.setPointerCapture) {
+      try { bar.setPointerCapture(event.pointerId); } catch {}
+    }
+  });
+
+  bar.addEventListener("pointermove", (event) => {
+    const state = navPointerState;
+    if (!state || event.pointerId !== state.pointerId) return;
+    const delta = event.clientX - state.startX;
+    if (!state.moved && Math.abs(delta) < 6) return;
+    state.moved = true;
+    const width = metricList()[0].width;
+    const offset = clampOffset(state.startOffset + delta);
+    paintDrag({ offset, width });
+    const near = nearestIndex(offset, width);
+    buttons.forEach((button, index) => button.classList.toggle("near", index === near));
+  });
+
+  bar.addEventListener("pointerup", endNavDrag);
+  bar.addEventListener("pointercancel", endNavDrag);
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      if (Date.now() < navSuppressClickUntil) return;
+      showView(button.dataset.view);
+    });
   });
 }
 
@@ -5653,7 +5799,7 @@ function openPlusAction(action) {
   document.body.classList.add("depth-stack");
 }
 
-$$(".nav-item").forEach((button) => button.addEventListener("click", () => showView(button.dataset.view)));
+setupBottomNav();
 $("#groupSearch").addEventListener("input", renderChatSearch);
 $("#groupList").addEventListener("click", (event) => {
   const row = event.target.closest("[data-group]");
@@ -5831,22 +5977,22 @@ messageList.addEventListener("contextmenu", (event) => {
   openMessageActions(messageElement.dataset.messageId, messageElement);
 });
 
-function isChatTextEntry(target) {
+function isTextEntry(target) {
   return Boolean(target.closest("input, textarea, [contenteditable='true']"));
 }
 
-chatPage.addEventListener("contextmenu", (event) => {
-  if (isChatTextEntry(event.target)) return;
+document.addEventListener("contextmenu", (event) => {
+  if (isTextEntry(event.target)) return;
   event.preventDefault();
 });
 
-chatPage.addEventListener("selectstart", (event) => {
-  if (isChatTextEntry(event.target)) return;
+document.addEventListener("selectstart", (event) => {
+  if (isTextEntry(event.target)) return;
   event.preventDefault();
 });
 
-chatPage.addEventListener("dragstart", (event) => {
-  if (isChatTextEntry(event.target)) return;
+document.addEventListener("dragstart", (event) => {
+  if (isTextEntry(event.target)) return;
   event.preventDefault();
 });
 
