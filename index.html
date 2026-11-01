@@ -4904,12 +4904,14 @@ function paintTabIndicator(metric, stretch = false, direction = 1) {
   const bar = $(".bottom-nav");
   const indicator = $(".tab-indicator", bar);
   if (!bar || !indicator || !metric) return;
+  const EDGE_GAP = 7;
   const stretchBy = stretch ? metric.width * .12 : 0;
   const scale = (metric.width + stretchBy) / metric.width;
-  const extra = metric.width * (scale - 1) / 2;
-  const rawOffset = metric.offset + stretch * direction * extra;
-  const maxOffset = bar.clientWidth - metric.width - extra;
-  const offset = Math.min(maxOffset, Math.max(extra, rawOffset));
+  const visualExtra = stretch ? metric.width * (scale - 1) / 2 : 0;
+  const rawOffset = metric.offset + (stretch ? direction * visualExtra : 0);
+  const minOffset = visualExtra + EDGE_GAP;
+  const maxOffset = bar.clientWidth - metric.width - visualExtra - EDGE_GAP;
+  const offset = Math.min(maxOffset, Math.max(minOffset, rawOffset));
   indicator.style.transformOrigin = "center";
   indicator.style.width = `${metric.width}px`;
   indicator.style.transform = `translate3d(${offset}px, 0, 0) scaleX(${scale})`;
@@ -5003,8 +5005,9 @@ function setupBottomNav() {
   };
   const metricFor = (view) => tabIndicatorMetrics?.get(view) || metricList()[0];
   const currentMetric = () => metricFor(document.body.dataset.view) || metricList()[0];
-  const maxOffset = () => Math.max(0, bar.clientWidth - (metricList()[0]?.width || 0));
-  const clampOffset = (value) => Math.min(maxOffset(), Math.max(0, value));
+  const NAV_EDGE_GAP = 7;
+  const maxOffset = () => Math.max(NAV_EDGE_GAP, bar.clientWidth - (metricList()[0]?.width || 0) - NAV_EDGE_GAP);
+  const clampOffset = (value) => Math.min(maxOffset(), Math.max(NAV_EDGE_GAP, value));
 
   function nearestIndex(offset, width) {
     const center = offset + width / 2;
