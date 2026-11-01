@@ -2,7 +2,11 @@
 <html lang="zh-CN" data-theme="light">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="西科乌托邦" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#f7f7f7" />
   <title>西科乌托邦 · 校园社区</title>
   <script>
@@ -3930,6 +3934,107 @@ body.depth-stack #drawerScrim.show {
   display: none;
 }
 
+/* Keep the mobile tab switch visual but avoid expensive repaints while it moves. */
+.tab-indicator {
+  transition: transform .2s cubic-bezier(.22, 1, .36, 1);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+@media (max-width: 560px) {
+  .view.active {
+    animation: view-fade-mobile .16s ease-out both;
+  }
+
+  .view.active,
+  .nav-item.tab-btn,
+  .nav-item.tab-btn:active,
+  .nav-item.tab-btn .nav-icon,
+  .nav-item.tab-btn.active .nav-icon,
+  .nav-item.tab-btn .nav-glyph {
+    transform: none !important;
+  }
+
+  .nav-item.tab-btn .nav-icon,
+  .nav-item.tab-btn .nav-glyph,
+  .nav-item.tab-btn .nav-label {
+    transition: color .16s ease, opacity .16s ease;
+  }
+
+  .bottom-nav,
+  html[data-theme="dark"] body[data-view] .bottom-nav {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    will-change: auto;
+  }
+}
+
+@keyframes view-fade-mobile {
+  from { opacity: .72; }
+  to { opacity: 1; }
+}
+
+/* Lock the mobile shell to the viewport so it behaves like an installed app. */
+@media (max-width: 560px) {
+  html,
+  body {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+  }
+
+  body {
+    touch-action: manipulation;
+  }
+
+  .app-shell {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .appbar {
+    flex: 0 0 auto;
+  }
+
+  .content {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .view.active {
+    min-height: 100%;
+  }
+
+  .bottom-nav {
+    flex: 0 0 auto;
+  }
+
+  .content,
+  .chat-wallpaper,
+  .drawer {
+    scrollbar-width: none;
+  }
+
+  .content::-webkit-scrollbar,
+  .chat-wallpaper::-webkit-scrollbar,
+  .drawer::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* Notification center uses the same layered bottom-sheet motion. */
 #notificationDrawer {
   top: auto;
@@ -4083,7 +4188,6 @@ html[data-theme="dark"] #notificationDrawer {
         <span class="chat-avatar" id="chatAvatar">✦</span>
         <span class="chat-title-copy"><strong id="chatName">校园论坛</strong><small id="chatStatus">在线</small></span>
       </button>
-      <button class="header-icon" id="chatMuteBtn" aria-label="群通知">🔔</button>
       <button class="header-icon" id="chatMoreBtn" aria-label="更多">⋯</button>
     </header>
     <div class="pinned-bar"><span>⌖</span><p id="pinnedText"></p></div>
@@ -4622,12 +4726,12 @@ function placeTabIndicator() {
   const active = buttons.find((button) => button.classList.contains("active")) || buttons[0];
   const barRect = bar.getBoundingClientRect();
   const activeRect = active.getBoundingClientRect();
-  const contentRect = active.querySelector(".nav-content")?.getBoundingClientRect();
   const pillWidth = activeRect.width + 14;
   const buttonCenter = activeRect.left + activeRect.width / 2 - barRect.left - bar.clientLeft;
   const left = buttonCenter - pillWidth / 2;
-  indicator.style.width = `${pillWidth}px`;
-  indicator.style.transform = `translateX(${left}px)`;
+  const widthValue = `${pillWidth}px`;
+  if (indicator.style.width !== widthValue) indicator.style.width = widthValue;
+  indicator.style.transform = `translate3d(${left}px, 0, 0)`;
 }
 
 function renderGroups() {
@@ -4832,7 +4936,6 @@ function openChat(groupId, focusMessageId = null) {
   $("#chatName").textContent = group.name;
   $("#chatStatus").textContent = `${group.members} 位成员 · ${mutedGroups.has(group.id) ? "已静音" : "在线"}`;
   $("#pinnedText").textContent = group.pinned;
-  $("#chatMuteBtn").textContent = mutedGroups.has(group.id) ? "🔕" : "🔔";
   mentionPopover.innerHTML = group.mentions.map((item) => `<button data-mention="${item}">${item}</button>`).join("");
   mentionPopover.classList.remove("open");
   renderMessages(group);
@@ -5500,21 +5603,20 @@ $("#chatInfoBtn").addEventListener("click", () => {
   openDrawer("groupInfoDrawer");
 });
 $("#chatMoreBtn").addEventListener("click", () => $("#chatInfoBtn").click());
-$("#chatMuteBtn").addEventListener("click", () => {
+function toggleGroupMute() {
   const group = groups.find((item) => item.id === activeGroupId);
   if (!group) return;
   if (mutedGroups.has(group.id)) {
     mutedGroups.delete(group.id);
-    $("#chatMuteBtn").textContent = "🔔";
     showToast("已开启群消息提醒");
   } else {
     mutedGroups.add(group.id);
-    $("#chatMuteBtn").textContent = "🔕";
     showToast("已关闭群消息提醒");
   }
   $("#chatStatus").textContent = `${group.members} 位成员 · ${mutedGroups.has(group.id) ? "已静音" : "在线"}`;
-});
-$("#infoMuteToggle").addEventListener("click", () => $("#chatMuteBtn").click());
+  $("#infoMuteLabel").textContent = mutedGroups.has(group.id) ? "已静音" : "已开启";
+}
+$("#infoMuteToggle").addEventListener("click", toggleGroupMute);
 
 $("#settingsNotificationsBtn").addEventListener("click", () => openDrawer("notificationDrawer"));
 $("#markAllRead").addEventListener("click", () => {
