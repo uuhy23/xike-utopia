@@ -4905,10 +4905,14 @@ function paintTabIndicator(metric, stretch = false, direction = 1) {
   const indicator = $(".tab-indicator", bar);
   if (!bar || !indicator || !metric) return;
   const stretchBy = stretch ? metric.width * .12 : 0;
-  const offset = metric.offset + stretch * direction * stretchBy / 2;
+  const scale = (metric.width + stretchBy) / metric.width;
+  const extra = metric.width * (scale - 1) / 2;
+  const rawOffset = metric.offset + stretch * direction * extra;
+  const maxOffset = bar.clientWidth - metric.width - extra;
+  const offset = Math.min(maxOffset, Math.max(extra, rawOffset));
   indicator.style.transformOrigin = "center";
   indicator.style.width = `${metric.width}px`;
-  indicator.style.transform = `translate3d(${offset}px, 0, 0) scaleX(${(metric.width + stretchBy) / metric.width})`;
+  indicator.style.transform = `translate3d(${offset}px, 0, 0) scaleX(${scale})`;
 }
 
 function activeTabIndicatorMetric() {
