@@ -2963,6 +2963,29 @@ html[data-theme="dark"] .publish-btn {
 }
 
 /* Long-press message actions */
+.chat-page {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chat-page .message,
+.chat-page .message * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.chat-page input,
+.chat-page textarea,
+.chat-page [contenteditable="true"] {
+  -webkit-touch-callout: default;
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 .message {
   position: relative;
   -webkit-touch-callout: none;
@@ -5743,6 +5766,25 @@ messageList.addEventListener("contextmenu", (event) => {
   cancelMessagePress();
   suppressMessageClickUntil = Date.now() + 700;
   openMessageActions(messageElement.dataset.messageId, messageElement);
+});
+
+function isChatTextEntry(target) {
+  return Boolean(target.closest("input, textarea, [contenteditable='true']"));
+}
+
+chatPage.addEventListener("contextmenu", (event) => {
+  if (isChatTextEntry(event.target)) return;
+  event.preventDefault();
+});
+
+chatPage.addEventListener("selectstart", (event) => {
+  if (isChatTextEntry(event.target)) return;
+  event.preventDefault();
+});
+
+chatPage.addEventListener("dragstart", (event) => {
+  if (isChatTextEntry(event.target)) return;
+  event.preventDefault();
 });
 
 messageList.addEventListener("click", (event) => {
