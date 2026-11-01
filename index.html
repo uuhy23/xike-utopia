@@ -4886,6 +4886,928 @@ html[data-theme="light"] .pinned-stack {
   }
 }
 
+/* Pinned messages float over the wallpaper without pushing the chat flow. */
+.pinned-bar {
+  position: absolute;
+  z-index: 12;
+  top: 72px;
+  right: 14px;
+  left: 14px;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.pinned-summary {
+  border: 1px solid rgba(255, 255, 255, .13);
+  border-radius: 20px;
+  background: rgba(28, 29, 33, .62);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .1),
+    0 10px 26px rgba(0, 0, 0, .2);
+  backdrop-filter: blur(24px) saturate(145%);
+  -webkit-backdrop-filter: blur(24px) saturate(145%);
+}
+
+.pinned-stack {
+  gap: 7px;
+  padding: 8px 0 0;
+  border: 0;
+  background: transparent;
+}
+
+.pinned-item {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .22);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+}
+
+.message-list {
+  padding-top: 54px;
+}
+
+html[data-theme="light"] .pinned-bar {
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+html[data-theme="light"] .pinned-summary {
+  border-color: rgba(255, 255, 255, .74);
+  background: rgba(255, 255, 255, .58);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .92),
+    0 10px 26px rgba(42, 54, 72, .1);
+}
+
+@media (max-width: 560px) {
+  .pinned-bar {
+    right: 10px;
+    left: 10px;
+  }
+}
+
+/* Group announcement bottom sheet */
+.announcement-modal {
+  position: fixed;
+  z-index: 80;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 18px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .22s ease, visibility 0s linear .28s;
+}
+
+.announcement-modal.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .22s ease, visibility 0s linear 0s;
+}
+
+.announcement-scrim {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(8, 10, 14, .32);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.announcement-sheet {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: min(82vh, 680px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 28px;
+  background:
+    linear-gradient(145deg, rgba(42, 44, 50, .96), rgba(28, 30, 35, .94)),
+    #202126;
+  color: #f1f2f4;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .1),
+    0 24px 60px rgba(0, 0, 0, .38);
+  transform: translateY(24px) scale(.98);
+  transition: transform .32s cubic-bezier(.22, 1, .36, 1);
+}
+
+.announcement-modal.open .announcement-sheet {
+  transform: translateY(0) scale(1);
+}
+
+.announcement-sheet header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 18px 18px 12px;
+}
+
+.announcement-sheet header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.announcement-sheet header p {
+  margin: 3px 0 0;
+  color: #9299a4;
+  font-size: 11px;
+}
+
+.announcement-sheet header button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .06);
+  color: #f1f2f4;
+  font-size: 21px;
+}
+
+.announcement-body {
+  padding: 8px 20px 24px;
+}
+
+.announcement-body h3 {
+  margin: 4px 0 8px;
+  color: #fff;
+  font-size: 17px;
+}
+
+.announcement-body time {
+  display: block;
+  margin-bottom: 16px;
+  color: #8f96a0;
+  font-size: 10px;
+}
+
+.announcement-body p {
+  margin: 0;
+  color: #d9dde3;
+  font-size: 14px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+html[data-theme="light"] .announcement-sheet {
+  border-color: rgba(255, 255, 255, .72);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, .96), rgba(246, 248, 251, .96)),
+    #fff;
+  color: #25282e;
+}
+
+html[data-theme="light"] .announcement-sheet header p,
+html[data-theme="light"] .announcement-body time {
+  color: #7b838e;
+}
+
+html[data-theme="light"] .announcement-sheet header button {
+  border-color: rgba(58, 66, 78, .12);
+  background: rgba(57, 66, 80, .06);
+  color: #30343b;
+}
+
+html[data-theme="light"] .announcement-body h3 {
+  color: #1f2227;
+}
+
+html[data-theme="light"] .announcement-body p {
+  color: #3c4148;
+}
+
+/* Telegram-inspired profile settings page */
+body[data-view="settings"] .appbar {
+  display: none;
+}
+
+.content > #settingsView {
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 14px calc(104px + env(safe-area-inset-bottom, 0px));
+  background: #000;
+  color: #f4f5f7;
+}
+
+.settings-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 44px;
+}
+
+.settings-top-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.settings-round-btn,
+.settings-edit-pill {
+  display: grid;
+  place-items: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .06);
+  border-radius: 50%;
+  background: #1c1c1e;
+  color: #d8dadd;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04);
+}
+
+.settings-round-btn svg {
+  width: 21px;
+  height: 21px;
+}
+
+.settings-edit-pill {
+  min-width: 76px;
+  padding: 0 18px;
+  border-radius: 999px;
+  color: #f4f5f7;
+  font-size: 15px;
+}
+
+.settings-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0 17px;
+}
+
+.settings-profile-avatar {
+  display: grid;
+  place-items: center;
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  background: #33d9df;
+  color: #fff;
+  font-size: 43px;
+  font-weight: 650;
+  letter-spacing: -2px;
+  line-height: 1;
+  box-shadow: 0 10px 32px rgba(51, 217, 223, .12);
+}
+
+.settings-profile h1 {
+  margin: 12px 0 2px;
+  font-size: 28px;
+  font-weight: 500;
+  letter-spacing: -.8px;
+  line-height: 1.1;
+}
+
+.settings-profile p {
+  margin: 0;
+  color: #83868c;
+  font-size: 12px;
+}
+
+.settings-card,
+.settings-appearance {
+  margin: 0 0 11px;
+  overflow: hidden;
+  border-radius: 23px;
+  background: #1c1c1e;
+}
+
+.settings-card button,
+.settings-appearance button {
+  width: 100%;
+}
+
+.settings-card > button {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 11px;
+  min-height: 56px;
+  padding: 8px 16px;
+  border: 0;
+  background: transparent;
+  color: #f4f5f7;
+  text-align: left;
+}
+
+.settings-card > button:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: 16px;
+  bottom: 0;
+  left: 58px;
+  height: 1px;
+  background: rgba(255, 255, 255, .055);
+}
+
+.settings-card > button strong {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 15px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-value {
+  overflow: hidden;
+  color: #7f838a;
+  font-size: 12px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.settings-chevron {
+  justify-self: end;
+  color: #73777e;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 22px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.settings-color-icon {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 10px;
+  color: #fff;
+}
+
+.settings-color-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.settings-color-icon.red { background: linear-gradient(145deg, #ff6d75, #ef4a4f); }
+.settings-color-icon.coral { background: linear-gradient(145deg, #ff6f72, #f04d50); }
+.settings-color-icon.green { background: linear-gradient(145deg, #55d96a, #27bf52); }
+.settings-color-icon.orange { background: linear-gradient(145deg, #ffbc4a, #f39a24); }
+.settings-color-icon.sky { background: linear-gradient(145deg, #4fbaf4, #269fe9); }
+
+.settings-quick-card {
+  background: #131313;
+  border: 1px solid rgba(255, 255, 255, .05);
+}
+
+.settings-quick-card > button {
+  min-height: 58px;
+  color: #3d8cff;
+}
+
+.settings-quick-card > button strong {
+  color: #3d8cff;
+  font-size: 16px;
+}
+
+.settings-line-icon {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: #3d8cff;
+}
+
+.settings-line-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.settings-line-icon.at {
+  font-size: 32px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.settings-single-card > button {
+  min-height: 58px;
+}
+
+.settings-menu-list > button {
+  min-height: 58px;
+}
+
+.settings-secondary-list > button {
+  display: flex;
+  min-height: 50px;
+  padding-left: 16px;
+}
+
+.settings-secondary-list > button span {
+  margin-left: auto;
+}
+
+.settings-notify-badge {
+  margin-left: 0;
+}
+
+.settings-appearance {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 16px;
+}
+
+.settings-appearance > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.settings-appearance strong {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.settings-appearance span {
+  color: #7f838a;
+  font-size: 11px;
+}
+
+.settings-appearance .theme-switch {
+  border-color: rgba(255, 255, 255, .07);
+  background: #27272a;
+}
+
+.settings-appearance .theme-switch button.active {
+  background: #f4f4f5;
+  color: #111214;
+}
+
+html[data-theme="light"] .content > #settingsView {
+  background: #f4f5f7;
+  color: #1f2227;
+}
+
+html[data-theme="light"] .settings-round-btn,
+html[data-theme="light"] .settings-edit-pill,
+html[data-theme="light"] .settings-card,
+html[data-theme="light"] .settings-appearance {
+  border-color: rgba(34, 42, 54, .06);
+  background: #fff;
+  color: #1f2227;
+  box-shadow: 0 8px 24px rgba(31, 42, 58, .06);
+}
+
+html[data-theme="light"] .settings-quick-card {
+  background: #fff;
+}
+
+html[data-theme="light"] .settings-card > button {
+  color: #20242a;
+}
+
+html[data-theme="light"] .settings-card > button:not(:last-child)::after {
+  background: rgba(40, 48, 58, .08);
+}
+
+html[data-theme="light"] .settings-value,
+html[data-theme="light"] .settings-chevron,
+html[data-theme="light"] .settings-profile p,
+html[data-theme="light"] .settings-appearance span {
+  color: #7a828c;
+}
+
+html[data-theme="light"] .settings-appearance .theme-switch {
+  border-color: rgba(40, 48, 58, .08);
+  background: #eef1f5;
+}
+
+@media (max-width: 560px) {
+  .content > #settingsView {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+
+  .content > .view {
+    scrollbar-width: none;
+  }
+
+  .content > .view::-webkit-scrollbar {
+    display: none;
+  }
+
+  .settings-profile {
+    padding-top: 2px;
+  }
+}
+
+/* Bottom-up profile editor */
+.profile-editor-modal {
+  position: fixed;
+  z-index: 95;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  background: rgba(0, 0, 0, .18);
+  transition: opacity .22s ease, visibility 0s linear .38s;
+}
+
+.profile-editor-modal.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .22s ease, visibility 0s linear 0s;
+}
+
+.profile-editor-sheet {
+  width: min(760px, 100%);
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: calc(12px + env(safe-area-inset-top, 0px)) 14px calc(30px + env(safe-area-inset-bottom, 0px));
+  border-radius: 28px 28px 0 0;
+  background: #000;
+  color: #f4f5f7;
+  scrollbar-width: none;
+  transform: translateY(100%);
+  transition: transform .38s cubic-bezier(.22, 1, .36, 1);
+}
+
+.profile-editor-sheet::-webkit-scrollbar {
+  display: none;
+}
+
+.profile-editor-modal.open .profile-editor-sheet {
+  transform: translateY(0);
+}
+
+.profile-editor-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+}
+
+.profile-editor-topbar button {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .045);
+  border-radius: 50%;
+  background: #1c1c1e;
+  color: #f4f5f7;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.profile-editor-topbar #saveProfileEditor {
+  border-color: rgba(105, 165, 255, .5);
+  background: #3d8cff;
+  box-shadow: 0 7px 20px rgba(61, 140, 255, .24);
+}
+
+.profile-editor-topbar #saveProfileEditor svg {
+  width: 25px;
+  height: 25px;
+}
+
+.profile-avatar-editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 9px;
+  width: max-content;
+  margin: 18px auto 26px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #3d8cff;
+  font-size: 16px;
+}
+
+.profile-avatar-camera {
+  display: grid;
+  place-items: center;
+  width: 136px;
+  height: 136px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(56, 99, 170, .25), transparent 58%),
+    #111217;
+  color: #3d8cff;
+}
+
+.profile-avatar-camera svg {
+  width: 54px;
+  height: 54px;
+}
+
+.profile-editor-card {
+  margin: 0 0 8px;
+  overflow: hidden;
+  border-radius: 23px;
+  background: #1c1c1e;
+}
+
+.profile-name-fields label {
+  display: flex;
+  align-items: center;
+  min-height: 58px;
+  padding: 0 18px;
+}
+
+.profile-name-fields label + label {
+  border-top: 1px solid rgba(255, 255, 255, .06);
+}
+
+.profile-name-fields input,
+.profile-bio-field textarea,
+.profile-editor-row input {
+  width: 100%;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #f4f5f7;
+  font-size: 16px;
+}
+
+.profile-name-fields input::placeholder,
+.profile-bio-field textarea::placeholder {
+  color: #8a8d93;
+}
+
+.profile-editor-hint {
+  margin: 0 10px 22px;
+  color: #777b82;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.profile-bio-field {
+  border-radius: 999px;
+  padding: 13px 16px;
+}
+
+.profile-bio-field textarea {
+  display: block;
+  resize: none;
+  line-height: 1.4;
+}
+
+.profile-editor-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 62px;
+  padding: 9px 17px;
+}
+
+.profile-editor-row strong {
+  flex: 0 0 auto;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.profile-editor-row input {
+  margin-left: auto;
+  text-align: right;
+  color: #8d9198;
+  font-size: 13px;
+}
+
+.profile-editor-icon {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  flex: 0 0 39px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 21px;
+  line-height: 1;
+}
+
+.profile-editor-icon.birthday { background: #4698ff; }
+.profile-editor-icon.username { background: #8f7aff; font-size: 29px; }
+.profile-editor-icon.color { background: #66c8ef; font-size: 22px; }
+
+.profile-editor-menu > button {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 62px;
+  padding: 9px 17px;
+  border: 0;
+  background: transparent;
+  color: #f4f5f7;
+  text-align: left;
+}
+
+.profile-editor-menu > button + button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 17px;
+  left: 68px;
+  height: 1px;
+  background: rgba(255, 255, 255, .06);
+}
+
+.profile-editor-menu strong {
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.profile-editor-menu [id$="Value"] {
+  color: #898d94;
+  font-size: 13px;
+}
+
+.profile-color-dot {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, .35);
+  border-radius: 50%;
+}
+
+.profile-color-picker {
+  position: fixed;
+  z-index: 110;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .2s ease, visibility 0s linear .28s;
+}
+
+.profile-color-picker[hidden] {
+  display: none;
+}
+
+.profile-color-picker.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .2s ease, visibility 0s linear 0s;
+}
+
+.profile-color-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(0, 0, 0, .56);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+.profile-color-panel {
+  position: relative;
+  width: min(520px, 100%);
+  padding: 18px 18px calc(20px + env(safe-area-inset-bottom, 0px));
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 28px 28px 0 0;
+  background: #1c1c1e;
+  color: #f4f5f7;
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, .45);
+  transform: translateY(100%);
+  transition: transform .32s cubic-bezier(.22, 1, .36, 1);
+}
+
+.profile-color-picker.open .profile-color-panel {
+  transform: translateY(0);
+}
+
+.profile-color-panel > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.profile-color-panel h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.profile-color-panel header p {
+  margin: 4px 0 0;
+  color: #858a92;
+  font-size: 11px;
+}
+
+.profile-color-panel header button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .05);
+  color: #e7e9ec;
+  font-size: 20px;
+}
+
+.profile-color-swatches {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 11px;
+  margin: 22px 2px 20px;
+}
+
+.profile-color-swatches button {
+  aspect-ratio: 1;
+  padding: 0;
+  border: 3px solid transparent;
+  border-radius: 50%;
+  background: var(--swatch);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .25),
+    0 4px 12px rgba(0, 0, 0, .22);
+}
+
+.profile-color-swatches button.active {
+  border-color: #fff;
+  box-shadow:
+    0 0 0 2px #1c1c1e,
+    0 0 0 4px rgba(255, 255, 255, .42);
+}
+
+.profile-custom-color {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 52px;
+  padding: 0 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, .055);
+  color: #d8dbe0;
+  font-size: 14px;
+}
+
+.profile-custom-color-control {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.profile-custom-color-control > span {
+  width: 24px;
+  height: 24px;
+  border: 2px solid rgba(255, 255, 255, .38);
+  border-radius: 50%;
+}
+
+.profile-custom-color input {
+  width: 42px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+}
+
+.profile-color-done {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #3d8cff;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (max-width: 420px) {
+  .profile-color-swatches {
+    gap: 8px;
+  }
+}
+
   </style>
 </head>
 <body data-view="forum">
@@ -4945,26 +5867,93 @@ html[data-theme="light"] .pinned-stack {
       </section>
 
       <section class="view" id="settingsView">
-        <div class="page-heading">
-          <div>
-            <h1>设置</h1>
-            <p>外观、通知与账号</p>
+        <header class="settings-topbar">
+          <button class="settings-round-btn" type="button" data-stub="二维码" aria-label="二维码">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="5" height="5" rx="1"/><rect x="15" y="4" width="5" height="5" rx="1"/><rect x="4" y="15" width="5" height="5" rx="1"/><path d="M14 14h3v3h-3zM19 14h1M14 19h5M20 18v2"/></svg>
+          </button>
+          <div class="settings-top-actions">
+            <button class="settings-round-btn" type="button" data-stub="搜索" aria-label="搜索">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="10.8" cy="10.8" r="6.8"/><path d="m16 16 4 4"/></svg>
+            </button>
+            <button class="settings-edit-pill" type="button" id="settingsEditBtn">编辑</button>
           </div>
+        </header>
+
+        <section class="settings-profile">
+          <div class="settings-profile-avatar" id="settingsProfileAvatar">UH</div>
+          <h1 id="settingsDisplayName">uu hy</h1>
+          <p id="settingsDisplayMeta">@xike · 教室101</p>
+        </section>
+
+        <div class="settings-card settings-quick-card">
+          <button type="button" id="settingsAvatarBtn">
+            <span class="settings-line-icon blue">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8h3l1.4-2h7.2L17 8h3v11H4V8Z"/><circle cx="12" cy="13" r="3.4"/></svg>
+            </span>
+            <strong>设置头像</strong>
+          </button>
+          <button type="button" id="settingsUsernameBtn">
+            <span class="settings-line-icon blue at">@</span>
+            <strong>设置用户名</strong>
+          </button>
         </div>
-        <section class="appearance-card">
+
+        <div class="settings-card settings-single-card">
+          <button type="button" id="settingsProfileBtn">
+            <span class="settings-color-icon red">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><circle cx="12" cy="8" r="4"/><path d="M4.5 20c.6-4.1 3.2-6.5 7.5-6.5s6.9 2.4 7.5 6.5h-15Z"/></svg>
+            </span>
+            <strong>我的资料</strong>
+            <span class="settings-chevron">›</span>
+          </button>
+        </div>
+
+        <div class="settings-card settings-menu-list">
+          <button id="settingsNotificationsBtn" type="button">
+            <span class="settings-color-icon coral">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M18 9a6 6 0 0 0-12 0v5l-2 3h16l-2-3V9Z"/><path d="M9.5 19h5a2.5 2.5 0 0 1-5 0Z"/></svg>
+            </span>
+            <strong>通知和声音</strong>
+            <b class="settings-notify-badge" id="settingsNotifyBadge">0</b>
+            <span class="settings-chevron">›</span>
+          </button>
+          <button type="button" data-stub="学生认证">
+            <span class="settings-color-icon green">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 12 4 4 10-10"/></svg>
+            </span>
+            <strong>学生认证</strong>
+            <span class="settings-value">已认证 · 教室101</span>
+            <span class="settings-chevron">›</span>
+          </button>
+          <button type="button" data-stub="设备">
+            <span class="settings-color-icon orange">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="10" height="18" rx="2"/><path d="M8 18h2M17 7h3v14h-3"/></svg>
+            </span>
+            <strong>设备</strong>
+            <span class="settings-value">扫描二维码</span>
+            <span class="settings-chevron">›</span>
+          </button>
+          <button type="button" data-stub="聊天文件夹">
+            <span class="settings-color-icon sky">
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M3 7a2 2 0 0 1 2-2h5l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/></svg>
+            </span>
+            <strong>聊天文件夹</strong>
+            <span class="settings-chevron">›</span>
+          </button>
+        </div>
+
+        <div class="settings-card settings-secondary-list">
+          <button type="button" data-stub="社区公约">社区公约 <span class="settings-chevron">›</span></button>
+          <button type="button" data-stub="关于西科乌托邦">关于西科乌托邦 <span class="settings-chevron">›</span></button>
+        </div>
+
+        <section class="settings-appearance">
           <div><strong>外观</strong><span>浅色或黑夜模式</span></div>
           <div class="theme-switch" role="group" aria-label="选择主题">
-            <button data-theme-choice="light">浅色</button>
-            <button data-theme-choice="dark">黑夜</button>
+            <button type="button" data-theme-choice="light">浅色</button>
+            <button type="button" data-theme-choice="dark">黑夜</button>
           </div>
         </section>
-        <div class="menu-card">
-          <button id="settingsNotificationsBtn">通知中心 <span><b class="settings-notify-badge" id="settingsNotifyBadge">0</b> ›</span></button>
-          <button>学生认证 <span>已认证 · 教室101</span></button>
-          <button>社区公约 <span>›</span></button>
-          <button>关于西科乌托邦 <span>›</span></button>
-        </div>
-        <p class="prototype-note">当前为交互原型，账号和聊天数据保存在本机浏览器里。</p>
       </section>
     </main>
   </div>
@@ -5000,20 +5989,11 @@ html[data-theme="light"] .pinned-stack {
         <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 5-7 7 7 7"/></svg>
       </button>
       <button class="chat-title" id="chatInfoBtn">
-        <span class="chat-title-copy"><strong id="chatName">校园论坛</strong><small id="chatStatus">在线</small></span>
+        <span class="chat-title-copy"><strong id="chatName">校园论坛</strong><small id="chatStatus">在线人数待接入</small></span>
       </button>
       <button type="button" class="chat-avatar" id="chatAvatar" aria-label="群聊信息">✦</button>
       <button class="header-icon chat-more-button" id="chatMoreBtn" aria-label="更多" hidden>⋯</button>
     </header>
-    <div class="pinned-bar" id="pinnedBar">
-      <button class="pinned-summary" id="pinnedToggle" type="button" aria-expanded="false" aria-controls="pinnedStack">
-        <span class="pinned-icon" aria-hidden="true">◈</span>
-        <span class="pinned-lead-copy"><strong>置顶消息</strong><small id="pinnedGroupName">校园论坛</small></span>
-        <span class="pinned-count" id="pinnedCount">1</span>
-        <span class="pinned-chevron" aria-hidden="true">⌄</span>
-      </button>
-      <div class="pinned-stack" id="pinnedStack" hidden></div>
-    </div>
     <div class="chat-wallpaper"><div class="message-list" id="messageList"></div></div>
     <div class="mention-popover" id="mentionPopover"></div>
     <div class="message-action-layer" id="messageActionLayer" aria-hidden="true">
@@ -5109,6 +6089,7 @@ html[data-theme="light"] .pinned-stack {
     </div>
     <div class="group-profile" id="groupProfile"></div>
     <div class="profile-rows">
+      <button id="groupAnnouncementBtn">群公告 <span id="announcementPreview">暂无公告</span></button>
       <button id="infoMuteToggle">群消息提醒 <span id="infoMuteLabel">已开启</span></button>
       <button>查看群成员 <span>›</span></button>
       <button>搜索聊天记录 <span>›</span></button>
@@ -5145,6 +6126,24 @@ html[data-theme="light"] .pinned-stack {
     </div>
   </section>
 
+  <section class="announcement-modal" id="announcementModal" aria-label="群公告">
+    <button class="announcement-scrim" type="button" data-close-announcement aria-label="关闭公告"></button>
+    <div class="announcement-sheet" role="dialog" aria-modal="true" aria-labelledby="announcementTitle">
+      <header>
+        <div>
+          <h2>群公告</h2>
+          <p id="announcementGroupName"></p>
+        </div>
+        <button type="button" id="closeAnnouncement" aria-label="关闭">×</button>
+      </header>
+      <div class="announcement-body">
+        <h3 id="announcementTitle"></h3>
+        <time id="announcementMeta"></time>
+        <p id="announcementText"></p>
+      </div>
+    </div>
+  </section>
+
   <section class="plus-action-modal" id="plusActionModal" aria-label="快捷操作">
     <div class="plus-action-sheet">
       <header>
@@ -5176,6 +6175,85 @@ html[data-theme="light"] .pinned-stack {
         <button type="button" id="closeMessageForward" aria-label="关闭">×</button>
       </header>
       <div class="message-forward-list" id="messageForwardList"></div>
+    </div>
+  </section>
+
+  <section class="profile-editor-modal" id="profileEditorModal" aria-label="编辑个人资料">
+    <div class="profile-editor-sheet" role="dialog" aria-modal="true" aria-labelledby="profileEditorAvatar">
+      <header class="profile-editor-topbar">
+        <button type="button" id="closeProfileEditor" aria-label="关闭">×</button>
+        <button type="button" id="saveProfileEditor" aria-label="保存">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 4.5 4.5L19 7"/></svg>
+        </button>
+      </header>
+
+      <button class="profile-avatar-editor" type="button" id="profileAvatarEditor">
+        <span class="profile-avatar-camera" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8h3l1.4-2h7.2L17 8h3v11H4V8Z"/><circle cx="12" cy="13" r="3.4"/></svg>
+        </span>
+        <span id="profileEditorAvatar">设置头像</span>
+      </button>
+      <input id="profileAvatarInput" type="file" accept="image/*" hidden />
+
+      <div class="profile-editor-card profile-name-fields">
+        <label><input id="profileFirstName" maxlength="24" placeholder="名字" /></label>
+        <label><input id="profileLastName" maxlength="24" placeholder="姓氏" /></label>
+      </div>
+      <p class="profile-editor-hint">输入您的姓名，同时可以添加头像。</p>
+
+      <div class="profile-editor-card profile-bio-field">
+        <textarea id="profileBio" rows="2" maxlength="120" placeholder="个人简介"></textarea>
+      </div>
+      <p class="profile-editor-hint">关于您自己的文字介绍。</p>
+
+      <div class="profile-editor-card profile-editor-row">
+        <span class="profile-editor-icon birthday">🎂</span>
+        <strong>生日</strong>
+        <input id="profileBirthday" type="date" aria-label="生日" />
+      </div>
+      <p class="profile-editor-hint">没人能看到您的生日。</p>
+
+      <div class="profile-editor-card profile-editor-menu">
+        <button type="button" id="profileUsernameRow">
+          <span class="profile-editor-icon username">@</span>
+          <strong>用户名</strong>
+          <span id="profileUsernameValue">@xike</span>
+          <span class="settings-chevron">›</span>
+        </button>
+        <button type="button" id="profileColorRow">
+          <span class="profile-editor-icon color">✦</span>
+          <strong>您的颜色</strong>
+          <span class="profile-color-dot" id="profileColorDot"></span>
+          <span class="settings-chevron">›</span>
+        </button>
+      </div>
+    </div>
+    <div class="profile-color-picker" id="profileColorPicker" hidden>
+      <button class="profile-color-backdrop" type="button" data-close-profile-color aria-label="关闭调色盘"></button>
+      <div class="profile-color-panel" role="dialog" aria-modal="true" aria-label="选择颜色">
+        <header>
+          <div><h3>选择您的颜色</h3><p>可以选预设色，也可以自定义</p></div>
+          <button type="button" data-close-profile-color aria-label="关闭">×</button>
+        </header>
+        <div class="profile-color-swatches" id="profileColorSwatches">
+          <button type="button" style="--swatch:#33d9df" data-profile-color="#33d9df" aria-label="青色"></button>
+          <button type="button" style="--swatch:#4f95ff" data-profile-color="#4f95ff" aria-label="蓝色"></button>
+          <button type="button" style="--swatch:#9b7bff" data-profile-color="#9b7bff" aria-label="紫色"></button>
+          <button type="button" style="--swatch:#ff7b7b" data-profile-color="#ff7b7b" aria-label="红色"></button>
+          <button type="button" style="--swatch:#ffb84d" data-profile-color="#ffb84d" aria-label="橙色"></button>
+          <button type="button" style="--swatch:#53d87a" data-profile-color="#53d87a" aria-label="绿色"></button>
+          <button type="button" style="--swatch:#ff8dc7" data-profile-color="#ff8dc7" aria-label="粉色"></button>
+          <button type="button" style="--swatch:#e8edf4" data-profile-color="#e8edf4" aria-label="白色"></button>
+        </div>
+        <label class="profile-custom-color">
+          <span>自定义颜色</span>
+          <span class="profile-custom-color-control">
+            <span id="profileColorPreview"></span>
+            <input id="profileCustomColor" type="color" value="#33d9df" />
+          </span>
+        </label>
+        <button type="button" class="profile-color-done" data-close-profile-color>完成</button>
+      </div>
     </div>
   </section>
 
@@ -5473,6 +6551,24 @@ const notificationSeed = [
 let groups = loadStored("campus-community-groups-v7", groupSeed);
 let notifications = loadStored("campus-community-notifications-v7", notificationSeed);
 notifications = notifications.filter((item) => !item.target && item.type !== "comment" && item.type !== "like");
+const announcementSeed = {
+  general: { id: "ann-general-1", title: "校园论坛公告", text: "欢迎来到校园论坛，请文明发言，遇到问题可以先搜索群聊记录。", updatedAt: "2026-11-01 18:00" },
+  dorm: { id: "ann-dorm-1", title: "宿舍公告", text: "报修请写清楚宿舍号，群聊内不要发布个人隐私信息。", updatedAt: "2026-11-01 17:40" },
+  teaching: { id: "ann-teaching-1", title: "教学公告", text: "高数期中复习资料已上传班级共享盘，请注意查收。", updatedAt: "2026-11-01 17:20" }
+};
+let groupAnnouncements = loadStored("campus-community-announcements-v1", announcementSeed);
+let seenAnnouncements = loadStored("campus-community-seen-announcements-v1", {});
+let userProfile = loadStored("campus-community-profile-v1", {
+  firstName: "uu",
+  lastName: "hy",
+  bio: "",
+  birthday: "",
+  username: "xike",
+  color: "#33d9df",
+  avatar: ""
+});
+let pendingProfileAvatar = userProfile.avatar || "";
+let pendingProfileColor = userProfile.color;
 let activeGroupId = null;
 let mutedGroups = new Set();
 let forumEditMode = false;
@@ -5498,7 +6594,42 @@ let tabIndicatorAnimationToken = 0;
 let navPointerState = null;
 let navSuppressClickUntil = 0;
 let navDragMetric = null;
-const currentUserIsPinnedManager = false;
+
+const groupOnlineCounts = new Map();
+const groupPresenceApi = {
+  endpoint: window.CAMPUS_GROUP_ONLINE_ENDPOINT || "",
+  provider: null,
+  setEndpoint(endpoint) {
+    this.endpoint = typeof endpoint === "string" ? endpoint : "";
+  },
+  setProvider(provider) {
+    this.provider = typeof provider === "function" ? provider : null;
+  },
+  setOnlineCount(groupId, count) {
+    const value = Number(count);
+    if (!Number.isFinite(value) || value < 0) return;
+    groupOnlineCounts.set(groupId, Math.floor(value));
+    const activeGroup = groups.find((group) => group.id === groupId);
+    if (activeGroup && activeGroupId === groupId) renderChatStatus(activeGroup);
+  },
+  async get(groupId) {
+    try {
+      if (this.provider) return await this.provider(groupId);
+      if (!this.endpoint) return null;
+      const url = this.endpoint
+        .replace(":groupId", encodeURIComponent(groupId))
+        .replace("{groupId}", encodeURIComponent(groupId));
+      const response = await fetch(url, { headers: { Accept: "application/json" } });
+      if (!response.ok) return null;
+      const data = await response.json();
+      return data?.onlineCount ?? data?.online ?? data?.count ?? data;
+    } catch {
+      return null;
+    }
+  }
+};
+window.CampusCommunity = window.CampusCommunity || {};
+window.CampusCommunity.groupPresence = groupPresenceApi;
 
 function loadStored(key, fallback) {
   try {
@@ -5511,6 +6642,100 @@ function loadStored(key, fallback) {
 
 function saveGroups() { localStorage.setItem("campus-community-groups-v7", JSON.stringify(groups)); }
 function saveNotifications() { localStorage.setItem("campus-community-notifications-v7", JSON.stringify(notifications)); }
+function saveGroupAnnouncements() { localStorage.setItem("campus-community-announcements-v1", JSON.stringify(groupAnnouncements)); }
+function saveSeenAnnouncements() { localStorage.setItem("campus-community-seen-announcements-v1", JSON.stringify(seenAnnouncements)); }
+function saveUserProfile() { localStorage.setItem("campus-community-profile-v1", JSON.stringify(userProfile)); }
+
+function profileInitials() {
+  const value = `${userProfile.firstName || ""}${userProfile.lastName || ""}`.trim();
+  return (value || "UH").slice(0, 2).toUpperCase();
+}
+
+function renderProfileSummary() {
+  const avatar = $("#settingsProfileAvatar");
+  const initials = profileInitials();
+  avatar.textContent = userProfile.avatar ? "" : initials;
+  avatar.style.backgroundImage = userProfile.avatar ? `url("${userProfile.avatar}")` : "";
+  avatar.style.backgroundSize = "cover";
+  avatar.style.backgroundPosition = "center";
+  avatar.style.backgroundColor = userProfile.avatar ? "transparent" : userProfile.color;
+  $("#settingsDisplayName").textContent = `${userProfile.firstName} ${userProfile.lastName}`.trim() || "未设置姓名";
+  $("#settingsDisplayMeta").textContent = `@${userProfile.username || "未设置用户名"} · 教室101`;
+}
+
+function openProfileEditor() {
+  pendingProfileAvatar = userProfile.avatar || "";
+  pendingProfileColor = userProfile.color || "#33d9df";
+  $("#profileFirstName").value = userProfile.firstName || "";
+  $("#profileLastName").value = userProfile.lastName || "";
+  $("#profileBio").value = userProfile.bio || "";
+  $("#profileBirthday").value = userProfile.birthday || "";
+  $("#profileUsernameValue").textContent = `@${userProfile.username || "未设置"}`;
+  setPendingProfileColor(pendingProfileColor);
+  closeProfileColorPicker();
+  const editorAvatar = $("#profileEditorAvatar");
+  editorAvatar.textContent = pendingProfileAvatar ? "更换头像" : "设置头像";
+  const modal = $("#profileEditorModal");
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+}
+
+function closeProfileEditor() {
+  closeProfileColorPicker();
+  const modal = $("#profileEditorModal");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+function saveProfileEditor() {
+  const firstName = $("#profileFirstName").value.trim();
+  const lastName = $("#profileLastName").value.trim();
+  if (!firstName && !lastName) {
+    showToast("请至少填写一个名字");
+    return;
+  }
+  userProfile = {
+    ...userProfile,
+    firstName,
+    lastName,
+    bio: $("#profileBio").value.trim(),
+    birthday: $("#profileBirthday").value,
+    avatar: pendingProfileAvatar,
+    color: pendingProfileColor
+  };
+  saveUserProfile();
+  renderProfileSummary();
+  closeProfileEditor();
+  showToast("个人资料已保存");
+}
+
+function openProfileColorPicker() {
+  const picker = $("#profileColorPicker");
+  picker.hidden = false;
+  requestAnimationFrame(() => picker.classList.add("open"));
+  $("#profileCustomColor").value = pendingProfileColor;
+  $("#profileColorPreview").style.background = pendingProfileColor;
+}
+
+function closeProfileColorPicker() {
+  const picker = $("#profileColorPicker");
+  if (!picker) return;
+  picker.classList.remove("open");
+  setTimeout(() => {
+    if (!picker.classList.contains("open")) picker.hidden = true;
+  }, 220);
+}
+
+function setPendingProfileColor(color) {
+  if (!/^#[0-9a-f]{6}$/i.test(color)) return;
+  pendingProfileColor = color;
+  $("#profileColorDot").style.background = color;
+  $("#profileCustomColor").value = color;
+  $("#profileColorPreview").style.background = color;
+  $$("[data-profile-color]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.profileColor.toLowerCase() === color.toLowerCase());
+  });
+}
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
@@ -5994,8 +7219,9 @@ function openChat(groupId, focusMessageId = null) {
   $("#chatAvatar").textContent = group.icon;
   $("#chatAvatar").style.background = group.color;
   $("#chatName").textContent = group.name;
-  $("#chatStatus").textContent = `${group.members} 位成员 · ${mutedGroups.has(group.id) ? "已静音" : "在线"}`;
-  renderPinnedBar(group);
+  renderChatStatus(group);
+  refreshGroupOnlineCount(group);
+  maybeShowAnnouncement(group);
   mentionPopover.innerHTML = group.mentions.map((item) => `<button data-mention="${item}">${item}</button>`).join("");
   mentionPopover.classList.remove("open");
   renderMessages(group);
@@ -6014,34 +7240,52 @@ function openChat(groupId, focusMessageId = null) {
   }
 }
 
-function getPinnedList(group) {
-  const extra = {
-    general: "晚自习教室 215 开放到 22:30",
-    dorm: "宿舍 410 空调已报修，预计下午处理",
-    teaching: "高数复习资料已上传班级共享盘"
-  };
-  const base = Array.isArray(group.pins)
-    ? group.pins.filter(Boolean)
-    : Array.isArray(group.pinned)
-      ? group.pinned.filter(Boolean)
-      : group.pinned ? [group.pinned] : [];
-  if (extra[group.id] && !base.includes(extra[group.id])) base.push(extra[group.id]);
-  return base;
+function renderChatStatus(group) {
+  const onlineCount = groupOnlineCounts.get(group.id);
+  const onlineText = Number.isFinite(onlineCount)
+    ? `${onlineCount} 人在线`
+    : "在线人数待接入";
+  const muteText = mutedGroups.has(group.id) ? " · 已静音" : "";
+  $("#chatStatus").textContent = `${onlineText} · ${group.members} 位成员${muteText}`;
 }
 
-function renderPinnedBar(group) {
-  const pinnedList = getPinnedList(group);
-  $("#pinnedGroupName").textContent = group.name;
-  $("#pinnedCount").textContent = pinnedList.length;
-  $("#pinnedStack").innerHTML = pinnedList.map((text) =>
-    `<div class="pinned-item"><span aria-hidden="true">★</span><p>${escapeHtml(text)}</p></div>`
-  ).join("");
-  const bar = $("#pinnedBar");
-  const toggle = $("#pinnedToggle");
-  bar.classList.remove("open");
-  $("#pinnedStack").hidden = true;
-  toggle.setAttribute("aria-expanded", "false");
-  bar.classList.toggle("manager", currentUserIsPinnedManager);
+async function refreshGroupOnlineCount(group) {
+  const count = await groupPresenceApi.get(group.id);
+  const value = Number(count);
+  if (!Number.isFinite(value) || value < 0) return;
+  groupOnlineCounts.set(group.id, Math.floor(value));
+  if (activeGroupId === group.id) renderChatStatus(group);
+}
+
+function currentAnnouncement(groupId) {
+  return groupAnnouncements[groupId] || null;
+}
+
+function showAnnouncementModal(group, markSeen = true) {
+  const announcement = currentAnnouncement(group.id);
+  $("#announcementGroupName").textContent = group.name;
+  $("#announcementTitle").textContent = announcement?.title || "暂无公告";
+  $("#announcementText").textContent = announcement?.text || "这个群还没有发布公告。";
+  $("#announcementMeta").textContent = announcement?.updatedAt ? `更新于 ${announcement.updatedAt}` : "";
+  const modal = $("#announcementModal");
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden", "false");
+  if (announcement && markSeen && seenAnnouncements[group.id] !== announcement.id) {
+    seenAnnouncements[group.id] = announcement.id;
+    saveSeenAnnouncements();
+  }
+}
+
+function closeAnnouncementModal() {
+  const modal = $("#announcementModal");
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden", "true");
+}
+
+function maybeShowAnnouncement(group) {
+  const announcement = currentAnnouncement(group.id);
+  if (!announcement || seenAnnouncements[group.id] === announcement.id) return;
+  requestAnimationFrame(() => showAnnouncementModal(group, true));
 }
 
 function finishCloseChat() {
@@ -6764,7 +8008,10 @@ messageForwardModal.addEventListener("click", (event) => {
 
 document.addEventListener("keydown", (event) => {
   if (event.key !== "Escape") return;
-  if (messageForwardModal.classList.contains("open")) closeMessageForward();
+  if (!$("#profileColorPicker").hidden) closeProfileColorPicker();
+  else if ($("#profileEditorModal").classList.contains("open")) closeProfileEditor();
+  else if (messageForwardModal.classList.contains("open")) closeMessageForward();
+  else if ($("#announcementModal").classList.contains("open")) closeAnnouncementModal();
   else if (messageActionLayer.classList.contains("open")) closeMessageActions();
   else if (messageSelectionMode) exitMessageSelection();
 });
@@ -6774,17 +8021,19 @@ $("#chatInfoBtn").addEventListener("click", () => {
   if (!group) return;
   $("#groupProfile").innerHTML = `<div class="big-avatar" style="background:${group.color}">${group.icon}</div><h3>${escapeHtml(group.name)}</h3><p>${group.members} 位成员</p>`;
   $("#infoMuteLabel").textContent = mutedGroups.has(group.id) ? "已静音" : "已开启";
+  $("#announcementPreview").textContent = currentAnnouncement(group.id)?.title || "暂无公告";
   openDrawer("groupInfoDrawer");
 });
 $("#chatAvatar").addEventListener("click", () => $("#chatInfoBtn").click());
 $("#chatMoreBtn").addEventListener("click", () => $("#chatInfoBtn").click());
-$("#pinnedToggle").addEventListener("click", () => {
-  const bar = $("#pinnedBar");
-  const stack = $("#pinnedStack");
-  const expanded = bar.classList.toggle("open");
-  stack.hidden = !expanded;
-  $("#pinnedToggle").setAttribute("aria-expanded", String(expanded));
+$("#groupAnnouncementBtn").addEventListener("click", () => {
+  const group = groups.find((item) => item.id === activeGroupId);
+  if (!group) return;
+  closeDrawers();
+  showAnnouncementModal(group, true);
 });
+$("#closeAnnouncement").addEventListener("click", closeAnnouncementModal);
+$(".announcement-scrim").addEventListener("click", closeAnnouncementModal);
 function toggleGroupMute() {
   const group = groups.find((item) => item.id === activeGroupId);
   if (!group) return;
@@ -6795,12 +8044,46 @@ function toggleGroupMute() {
     mutedGroups.add(group.id);
     showToast("已关闭群消息提醒");
   }
-  $("#chatStatus").textContent = `${group.members} 位成员 · ${mutedGroups.has(group.id) ? "已静音" : "在线"}`;
+  renderChatStatus(group);
   $("#infoMuteLabel").textContent = mutedGroups.has(group.id) ? "已静音" : "已开启";
 }
 $("#infoMuteToggle").addEventListener("click", toggleGroupMute);
 
 $("#settingsNotificationsBtn").addEventListener("click", () => openDrawer("notificationDrawer"));
+$("#settingsEditBtn").addEventListener("click", openProfileEditor);
+$("#settingsAvatarBtn").addEventListener("click", openProfileEditor);
+$("#settingsUsernameBtn").addEventListener("click", openProfileEditor);
+$("#settingsProfileBtn").addEventListener("click", openProfileEditor);
+$("#closeProfileEditor").addEventListener("click", closeProfileEditor);
+$("#saveProfileEditor").addEventListener("click", saveProfileEditor);
+$("#profileAvatarEditor").addEventListener("click", () => $("#profileAvatarInput").click());
+$("#profileAvatarInput").addEventListener("change", (event) => {
+  const file = event.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.addEventListener("load", () => {
+    pendingProfileAvatar = String(reader.result || "");
+    $("#profileEditorAvatar").textContent = pendingProfileAvatar ? "更换头像" : "设置头像";
+  });
+  reader.readAsDataURL(file);
+});
+$("#profileColorRow").addEventListener("click", openProfileColorPicker);
+$("#profileColorSwatches").addEventListener("click", (event) => {
+  const swatch = event.target.closest("[data-profile-color]");
+  if (swatch) setPendingProfileColor(swatch.dataset.profileColor);
+});
+$("#profileCustomColor").addEventListener("input", (event) => {
+  setPendingProfileColor(event.target.value);
+});
+$$("[data-close-profile-color]").forEach((button) => {
+  button.addEventListener("click", closeProfileColorPicker);
+});
+$("#profileUsernameRow").addEventListener("click", () => {
+  const nextUsername = window.prompt("设置用户名", userProfile.username);
+  if (!nextUsername) return;
+  userProfile.username = nextUsername.replace(/^@+/, "").trim().slice(0, 24);
+  $("#profileUsernameValue").textContent = `@${userProfile.username}`;
+});
 $("#markAllRead").addEventListener("click", () => {
   notifications = notifications.map((item) => item.type === "mention" ? item : { ...item, unread: false });
   saveNotifications();
@@ -6869,6 +8152,7 @@ $$(".menu-card button:not(#settingsNotificationsBtn)").forEach((button) => butto
 
 renderGroups();
 renderNotifications();
+renderProfileSummary();
 
 const liquidGlassSelector = [
   ".appbar", ".telegram-search", ".group-list",
