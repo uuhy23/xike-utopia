@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#f7f7f7" />
-  <title>西科乌托邦 · 帖子与论坛</title>
+  <title>西科乌托邦 · 校园社区</title>
   <script>
     try {
       document.documentElement.dataset.theme =
@@ -108,7 +108,7 @@ body[data-view="forum"] .home-note { display: none; }
   z-index: 12;
   top: 0;
   display: grid;
-  grid-template-columns: minmax(70px, 1fr) auto minmax(108px, 1fr);
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   min-height: 76px;
   padding: 18px 16px 10px;
@@ -460,9 +460,7 @@ body[data-view="forum"] .nav-item.active .nav-icon {
   border-radius: 50%; color: #fff; font-size: 21px; font-weight: 750;
 }
 .group-avatar::after {
-  content: ""; position: absolute; right: 1px; bottom: 2px;
-  width: 10px; height: 10px; border: 2px solid #fff;
-  border-radius: 50%; background: #2db67b;
+  display: none;
 }
 .group-content { min-width: 0; }
 .group-name-line { display: flex; align-items: center; gap: 6px; }
@@ -541,6 +539,7 @@ body[data-view="forum"] .nav-item.active .nav-icon {
 .pinned-bar p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #667080; font-size: 10px; }
 .chat-wallpaper {
   flex: 1; overflow-y: auto;
+  touch-action: pan-y;
   background-color: #eaf0f5;
   background-image:
     radial-gradient(circle at 20px 20px, rgba(86,129,162,.065) 1.5px, transparent 1.5px),
@@ -976,6 +975,7 @@ body {
   box-shadow: var(--glass-inset), 0 8px 24px rgba(50, 72, 102, .08);
   backdrop-filter: blur(24px) saturate(175%);
   -webkit-backdrop-filter: blur(24px) saturate(175%);
+  contain: layout paint style;
 }
 
 .search-box,
@@ -1349,6 +1349,7 @@ body[data-view="forum"] .nav-item.active .nav-icon {
 /* 解瘾同款底部悬浮胶囊导航（名称不同） */
 .bottom-nav {
   position: fixed;
+  position: fixed !important;
   left: 50%;
   bottom: calc(12px + env(safe-area-inset-bottom, 0px));
   z-index: 20;
@@ -1398,8 +1399,9 @@ body[data-view="forum"] .nav-item.active .nav-icon {
   box-shadow:
     inset 0 2px 5px rgba(31, 47, 67, .2),
     inset 0 -1px 0 rgba(255,255,255,.5);
-  transition: transform .38s cubic-bezier(.3, 1.34, .46, 1), width .38s cubic-bezier(.3, 1.34, .46, 1);
+  transition: transform .26s cubic-bezier(.22, 1, .36, 1), width .26s cubic-bezier(.22, 1, .36, 1);
   pointer-events: none;
+  will-change: transform;
 }
 .nav-item.tab-btn {
   position: relative;
@@ -1419,6 +1421,7 @@ body[data-view="forum"] .nav-item.active .nav-icon {
   color: rgba(28, 38, 54, .72);
   font-size: 9px;
   transition: color .22s ease, transform .12s ease;
+  touch-action: manipulation;
 }
 .nav-item.tab-btn:active { transform: scale(.96); }
 .nav-item.tab-btn.active,
@@ -1499,6 +1502,10 @@ body[data-view="forum"] .nav-item.tab-btn {
   --nav-inactive-color: #202124;
   --nav-icon-cutout: #f4f4f7;
 }
+html[data-theme="light"] .nav-item.tab-btn { --nav-icon-cutout: #ffffff; }
+html[data-theme="light"] .nav-item.tab-btn.active { --nav-icon-cutout: #e4e5e8; }
+html[data-theme="dark"] .nav-item.tab-btn { --nav-icon-cutout: #242529; }
+html[data-theme="dark"] .nav-item.tab-btn.active { --nav-icon-cutout: #45464b; }
 .tab-indicator {
   background:
     linear-gradient(180deg, rgba(255,255,255,.5), transparent 42%),
@@ -1525,18 +1532,18 @@ body[data-view="forum"] .nav-item.tab-btn {
 }
 .nav-item.tab-btn.active {
   color: var(--nav-active-color);
-  transform: translateY(-1px);
+  transform: none;
 }
 .nav-item.tab-btn.active .nav-icon {
   opacity: 1;
-  transform: translateY(-1px) scale(1.04);
+  transform: scale(1.04);
   stroke-width: 2.25;
 }
 .nav-item.tab-btn.active .nav-label {
   color: var(--nav-active-color);
   opacity: 1;
   font-weight: 700;
-  transform: translateY(-1px);
+  transform: none;
 }
 
 body[data-view] .nav-item.tab-btn {
@@ -2150,15 +2157,34 @@ html[data-theme="dark"] .theme-switch button.active {
 }
 
 body[data-view] .bottom-nav {
-  padding: 4px 14px;
+  width: min(310px, calc(100% - 32px));
+  height: 60px;
+  padding: 5px 12px;
+  bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
 }
 body[data-view] .nav-item.tab-btn {
-  height: 56px;
+  height: 48px;
 }
 body[data-view] .bottom-nav .tab-indicator {
   top: 5px;
-  height: 56px;
+  height: 48px;
 }
+body[data-view] .bottom-nav .nav-icon {
+  width: 26px;
+  height: 26px;
+}
+
+.tab-create {
+  flex: 0 0 54px;
+  width: 54px;
+  height: 54px;
+  color: #1a1a1d;
+}
+.tab-create svg {
+  width: 31px;
+  height: 31px;
+}
+html[data-theme="dark"] .tab-create { color: #f4f4f5; }
 
 @media (max-width: 560px) {
   html {
@@ -2173,15 +2199,1778 @@ body[data-view] .bottom-nav .tab-indicator {
   }
 }
 
+@media (max-width: 560px) {
+  .telegram-header {
+    min-height: 66px;
+    padding: 12px 14px 7px;
+  }
+  .edit-pill {
+    min-width: 62px;
+    height: 38px;
+    padding: 0 13px;
+    font-size: 15px;
+  }
+  .chat-heading { gap: 8px; }
+  .chat-heading strong { font-size: 18px; }
+  .telegram-actions { gap: 9px; }
+  .circle-action { width: 42px; height: 42px; }
+  .compose-action { width: 46px; height: 46px; }
+  .telegram-search {
+    height: 50px;
+    margin: 7px 14px 10px;
+  }
+  .telegram-search input { font-size: 16px; }
+  body[data-view="forum"] .group-list {
+    margin: 4px 12px 0;
+  }
+  body[data-view="forum"] .group-row {
+    grid-template-columns: 54px minmax(0, 1fr) auto;
+    gap: 10px;
+    min-height: 76px;
+    padding: 10px 14px;
+  }
+  body[data-view="forum"] .group-avatar {
+    width: 54px;
+    height: 54px;
+    font-size: 20px;
+  }
+  body[data-view="forum"] .group-name { font-size: 14px; }
+  body[data-view="forum"] .group-preview {
+    margin-top: 3px;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+  body[data-view="forum"] .group-time { font-size: 10px; }
+  body[data-view="forum"] .unread-bubble {
+    min-width: 27px;
+    height: 22px;
+    font-size: 10px;
+  }
+  .appearance-card { padding: 12px; }
+  .profile-hero { padding: 22px 14px 18px; }
+}
+
+@media (max-width: 560px) {
+  .circle-action,
+  .compose-action {
+    width: 48px;
+    height: 48px;
+  }
+  .circle-action::before {
+    width: 32px;
+    height: 32px;
+    border-width: 2.5px;
+    border-color: currentColor;
+  }
+  .circle-action span {
+    font-size: 30px;
+    font-weight: 400;
+  }
+  .compose-action svg {
+    width: 27px;
+    height: 27px;
+    stroke-width: 2.4;
+  }
+}
+
 .compose-action.liquid-refract,
 .send-btn.liquid-refract {
   background: #2f7fe8 !important;
   color: #fff !important;
 }
 
+.bottom-nav {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  will-change: auto;
+}
+.tab-indicator {
+  transition: transform .22s cubic-bezier(.22, 1, .36, 1);
+  will-change: transform;
+}
+html[data-theme="dark"] .bottom-nav {
+  background: #17181c !important;
+}
+html[data-theme="light"] .bottom-nav {
+  background: #ffffff !important;
+}
+
+html[data-theme="dark"] body[data-view] .bottom-nav {
+  border-color: rgba(255, 255, 255, .11);
+  background: rgba(36, 37, 41, .86) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .08),
+    inset 0 -1px 0 rgba(0, 0, 0, .24),
+    0 12px 30px rgba(0, 0, 0, .42);
+  backdrop-filter: blur(16px) saturate(120%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(120%) !important;
+}
+html[data-theme="dark"] body[data-view] .bottom-nav .tab-indicator {
+  background: linear-gradient(180deg, rgba(74, 75, 80, .96), rgba(54, 55, 59, .96));
+  box-shadow:
+    inset 0 2px 6px rgba(0, 0, 0, .3),
+    inset 0 -1px 0 rgba(255, 255, 255, .09),
+    0 4px 12px rgba(0, 0, 0, .16);
+}
+html[data-theme="dark"] body[data-view] .nav-item.tab-btn {
+  color: #f4f4f5;
+}
+html[data-theme="dark"] body[data-view] .nav-item.tab-btn.active,
+html[data-theme="dark"] body[data-view] .nav-item.tab-btn.active .nav-label {
+  color: #4d9fff;
+}
+
+body.forum-editing[data-view="forum"] .group-row {
+  padding-left: 66px !important;
+}
+
+body.forum-editing[data-view="forum"] .group-row {
+  align-items: center;
+}
+
+body.forum-editing[data-view="forum"] .group-preview,
+body.forum-editing[data-view="forum"] .group-right,
+body.forum-editing[data-view="forum"] .pin-mini {
+  display: none;
+}
+
+body.forum-editing[data-view="forum"] .group-content {
+  align-self: center;
+}
+
+/* Deterministic icon and label alignment inside each fixed tab */
+body[data-view] .nav-item.tab-btn {
+  display: block;
+  padding: 0;
+}
+body[data-view] .nav-item.tab-btn .nav-glyph {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  display: grid;
+  place-items: center;
+  transform: translateX(-50%);
+}
+body[data-view] .nav-item.tab-btn .nav-label {
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+body[data-view] .nav-item.tab-btn.active .nav-label {
+  transform: translateX(-50%);
+}
+
+body[data-view] .nav-item.tab-btn > .nav-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transform: translate(-50%, -50%);
+}
+body[data-view] .nav-item.tab-btn > .nav-content > .nav-glyph {
+  position: relative;
+  top: auto;
+  left: auto;
+  display: grid;
+  place-items: center;
+  transform: none;
+}
+body[data-view] .nav-item.tab-btn > .nav-content > .nav-label,
+body[data-view] .nav-item.tab-btn.active > .nav-content > .nav-label {
+  position: static;
+  right: auto;
+  bottom: auto;
+  left: auto;
+  transform: none;
+}
+
+/* Jieyin liquid glass engine styles */
+:root {
+  --lg-blur: 14px;
+  --lg-saturate: 175%;
+  --lg-refract-band: 22;
+  --lg-refract-strength: 0.12;
+  --lg-tint: rgba(255, 255, 255, 0.5);
+  --lg-line: rgba(255, 255, 255, 0.6);
+  --lg-line-light: rgba(255, 255, 255, 0.95);
+  --lg-line-soft: rgba(15, 23, 42, 0.06);
+  --lg-sheen: rgba(255, 255, 255, 0.9);
+  --lg-shadow: 0 14px 34px rgba(15, 23, 42, 0.14);
+  --lg-gloss-opacity: 0.5;
+  --lg-capsule: rgba(120, 120, 128, 0.2);
+}
+
+html[data-theme="dark"] {
+  --lg-tint: rgba(120, 120, 128, 0.22);
+  --lg-line: rgba(255, 255, 255, 0.1);
+  --lg-line-light: rgba(255, 255, 255, 0.5);
+  --lg-line-soft: rgba(255, 255, 255, 0.1);
+  --lg-sheen: rgba(255, 255, 255, 0.22);
+  --lg-shadow: 0 10px 26px rgba(0, 0, 0, 0.26);
+  --lg-gloss-opacity: 0.6;
+  --lg-capsule: rgba(0, 0, 0, 0.72);
+}
+
+.glass {
+  position: relative;
+  background: var(--lg-tint);
+  border: 1px solid var(--lg-line);
+  box-shadow: var(--lg-shadow), inset 0 1px 0 var(--lg-sheen);
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate));
+  backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate));
+}
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    var(--lg-line-soft) 26%,
+    var(--lg-line-light) 62%,
+    transparent 100%
+  );
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  mix-blend-mode: screen;
+  opacity: 0.75;
+  pointer-events: none;
+  z-index: 4;
+}
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 3;
+  opacity: var(--lg-gloss-opacity, 0.5);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--lg-sheen) 60%, transparent), transparent 46%);
+  box-shadow:
+    inset -10px -8px 0 -11px var(--lg-line-light),
+    inset 0 -9px 0 -8px var(--lg-line-light),
+    inset 0 1px 0 var(--lg-sheen);
+}
+
+.bottom-nav.glass {
+  position: fixed !important;
+  background: var(--lg-tint) !important;
+  border-color: var(--lg-line);
+  box-shadow: var(--lg-shadow), inset 0 1px 0 var(--lg-sheen);
+  backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate));
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-saturate));
+}
+.bottom-nav.glass .tab-indicator {
+  background: var(--lg-capsule);
+  box-shadow:
+    inset 0 2px 5px rgba(0, 0, 0, 0.4),
+    inset 0 -1px 0 color-mix(in srgb, var(--lg-line-light) 22%, transparent);
+}
+
+html[data-theme="light"] .bottom-nav {
+  --nav-active-color: #3478f6;
+  --nav-inactive-color: #202124;
+}
+html[data-theme="dark"] .bottom-nav {
+  --nav-active-color: #4d9fff;
+  --nav-inactive-color: #f4f4f5;
+}
+
+/* Jieyin five-slot tab bar */
+.icon-solid { display: none; }
+.nav-item.tab-btn.active .icon-outline { display: none; }
+.nav-item.tab-btn.active .icon-solid { display: block; }
+
+html[data-theme="light"] .bottom-nav {
+  --nav-active-color: #17171a;
+  --nav-inactive-color: rgba(23, 23, 26, .78);
+}
+html[data-theme="dark"] .bottom-nav {
+  --nav-active-color: #ffffff;
+  --nav-inactive-color: #f5f5f7;
+}
+body[data-view] .nav-item.tab-btn {
+  color: var(--nav-inactive-color);
+}
+body[data-view] .nav-item.tab-btn.active,
+body[data-view] .nav-item.tab-btn.active .nav-icon {
+  color: var(--nav-active-color);
+}
+.tab-create {
+  color: #17171a;
+}
+html[data-theme="dark"] .tab-create { color: #f5f5f7; }
+
+/* Final icon colors: blue when selected, neutral when idle */
+html[data-theme="light"] body[data-view] .bottom-nav {
+  --nav-active-color: #3478f6;
+  --nav-inactive-color: #202124;
+}
+html[data-theme="dark"] body[data-view] .bottom-nav {
+  --nav-active-color: #4d9fff;
+  --nav-inactive-color: #f4f4f5;
+}
+body[data-view] .bottom-nav .nav-item.tab-btn {
+  color: var(--nav-inactive-color);
+}
+body[data-view] .bottom-nav .nav-item.tab-btn.active,
+body[data-view] .bottom-nav .nav-item.tab-btn.active .nav-icon,
+body[data-view] .bottom-nav .nav-item.tab-btn.active .nav-label {
+  color: var(--nav-active-color);
+}
+
+/* Compact, visually centered forum search */
+label.telegram-search {
+  height: 38px;
+  margin: 5px 24px 7px;
+}
+label.telegram-search > input {
+  padding: 0 16px;
+  text-align: center !important;
+  font-size: 14px;
+}
+label.telegram-search > input::placeholder {
+  color: transparent !important;
+}
+label.telegram-search > .telegram-search-prompt {
+  position: absolute;
+  inset: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: #92979e;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+  transition: opacity .15s ease;
+}
+label.telegram-search > .telegram-search-prompt span {
+  position: static;
+  left: auto;
+  color: #92979e;
+  font-size: 14px;
+  line-height: 1;
+}
+label.telegram-search > .telegram-search-prompt b {
+  color: #92979e;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+}
+label.telegram-search > input:focus + .telegram-search-prompt,
+label.telegram-search > input:not(:placeholder-shown) + .telegram-search-prompt {
+  opacity: 0;
+  visibility: hidden;
+}
+
+label.new-chat-search > input {
+  padding: 0 14px;
+  text-align: center !important;
+  font-size: 16px;
+}
+label.new-chat-search > input::placeholder {
+  color: transparent !important;
+}
+label.new-chat-search > .new-chat-search-prompt {
+  position: absolute;
+  inset: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: none;
+  transition: opacity .15s ease;
+}
+label.new-chat-search > .new-chat-search-prompt span {
+  position: static;
+  left: auto;
+  color: #92979e;
+  font-size: 16px;
+  line-height: 1;
+}
+label.new-chat-search > .new-chat-search-prompt b {
+  color: #92979e;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1;
+}
+label.new-chat-search > input:focus + .new-chat-search-prompt,
+label.new-chat-search > input:not(:placeholder-shown) + .new-chat-search-prompt {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Unified interaction motion */
+.view.active {
+  animation: view-enter .26s cubic-bezier(.22, 1, .36, 1) both;
+}
+@keyframes view-enter {
+  from { opacity: 0; transform: translateY(8px) scale(.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.post-card {
+  animation: card-enter .28s cubic-bezier(.22, 1, .36, 1) both;
+}
+.post-column:nth-child(2) .post-card:nth-child(2) { animation-delay: .03s; }
+.post-column:nth-child(2) .post-card:nth-child(3) { animation-delay: .06s; }
+@keyframes card-enter {
+  from { opacity: 0; transform: translateY(10px) scale(.99); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.group-row,
+.chat-search-result,
+.notification-item,
+.comment {
+  transition: background-color .18s ease, transform .18s ease;
+}
+.group-row:active,
+.chat-search-result:active,
+.notification-item:active {
+  transform: scale(.985);
+}
+
+.select-circle {
+  transition:
+    background-color .2s ease,
+    border-color .2s ease,
+    color .2s ease,
+    transform .24s cubic-bezier(.22, 1, .36, 1);
+}
+.select-circle.checked,
+.group-row.selected .select-circle {
+  transform: translateY(-50%) scale(1.1);
+}
+@keyframes edit-row-right {
+  from { opacity: .45; transform: translateX(-26px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes edit-row-left {
+  from { opacity: .45; transform: translateX(22px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.group-list.edit-shift-right .group-row {
+  animation: edit-row-right .34s cubic-bezier(.22, 1, .36, 1) both;
+}
+.group-list.edit-shift-left .group-row {
+  animation: edit-row-left .26s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.edit-action-bar {
+  display: flex;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 14px);
+  transition:
+    opacity .2s ease,
+    transform .28s cubic-bezier(.22, 1, .36, 1),
+    visibility 0s linear .28s;
+}
+body.forum-editing .edit-action-bar {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translate(-50%, 0);
+  transition:
+    opacity .2s ease,
+    transform .28s cubic-bezier(.22, 1, .36, 1),
+    visibility 0s linear 0s;
+}
+.edit-action-bar button {
+  transition: transform .16s ease, background-color .16s ease, color .16s ease;
+}
+.edit-action-bar button:active {
+  transform: scale(.96);
+}
+
+.chat-search-result {
+  animation: result-enter .2s ease both;
+}
+@keyframes result-enter {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.primary-btn,
+.sheet-publish,
+.plus-primary,
+.comment-bar button,
+.send-btn,
+.tab-create,
+.topic-chip {
+  transition: transform .16s ease, background-color .18s ease, color .18s ease, box-shadow .18s ease;
+}
+.primary-btn:active,
+.sheet-publish:active,
+.plus-primary:active,
+.comment-bar button:active,
+.send-btn:active,
+.tab-create:active,
+.topic-chip:active {
+  transform: scale(.95);
+}
+
+.bottom-nav {
+  transition:
+    opacity .2s ease,
+    transform .28s cubic-bezier(.22, 1, .36, 1),
+    visibility 0s linear 0s;
+}
+body.forum-editing .bottom-nav {
+  display: flex !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translate(-50%, 14px);
+  transition:
+    opacity .18s ease,
+    transform .26s cubic-bezier(.22, 1, .36, 1),
+    visibility 0s linear .26s;
+}
+
+.chat-page.open,
+.post-detail.open {
+  animation: full-page-enter .24s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.chat-page.open {
+  animation: chat-page-slide-in .34s cubic-bezier(.22, 1, .36, 1) both;
+  will-change: transform;
+}
+
+.chat-page.open.closing {
+  pointer-events: none;
+  animation: chat-page-slide-out .3s cubic-bezier(.4, 0, 1, 1) both;
+}
+
+@keyframes chat-page-slide-in {
+  from {
+    opacity: .88;
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes chat-page-slide-out {
+  from {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    opacity: .92;
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes full-page-enter {
+  from { opacity: 0; transform: translateY(8px) scale(.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Bottom-sheet motion instead of instant pop-up */
+.new-chat-modal,
+.post-modal,
+.plus-action-modal {
+  display: flex !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .24s ease, visibility 0s linear .36s;
+}
+.new-chat-modal.open,
+.post-modal.open,
+.plus-action-modal.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .24s ease, visibility 0s linear 0s;
+}
+.new-chat-panel {
+  transform: translateY(110%);
+  transition: transform .42s cubic-bezier(.22, 1, .36, 1);
+  will-change: transform;
+}
+.new-chat-modal.open .new-chat-panel {
+  transform: translateY(0);
+}
+.post-sheet,
+.plus-action-sheet {
+  opacity: 0;
+  transform: translateY(26px) scale(.97);
+  transition:
+    opacity .22s ease,
+    transform .34s cubic-bezier(.22, 1, .36, 1);
+  will-change: transform, opacity;
+}
+.post-modal.open .post-sheet,
+.plus-action-modal.open .plus-action-sheet {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Layered, compact new-conversation sheet */
+.new-chat-panel {
+  position: relative;
+  isolation: isolate;
+  width: min(680px, 100%);
+  min-height: 93dvh;
+  padding: 18px 22px calc(24px + env(safe-area-inset-bottom, 0px));
+  overflow: visible;
+  border-radius: 44px 44px 0 0;
+  background: var(--quiet-surface);
+  box-shadow: 0 -18px 55px rgba(20, 25, 32, .16);
+}
+.new-chat-panel::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: -13px;
+  right: 13px;
+  left: 13px;
+  height: 48px;
+  border-radius: 40px 40px 0 0;
+  background: rgba(197, 200, 207, .92);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55);
+}
+html[data-theme="dark"] .new-chat-panel::before {
+  background: rgba(61, 63, 69, .96);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+.new-chat-panel > header {
+  margin-bottom: 14px;
+}
+.new-chat-panel > header h2 {
+  font-size: 18px;
+  letter-spacing: -.2px;
+}
+.new-chat-panel > header button {
+  width: 42px;
+  height: 42px;
+  font-size: 28px;
+}
+.new-chat-search {
+  width: min(470px, 100%);
+  height: 48px;
+  margin: 0 auto 10px;
+}
+.new-chat-search span {
+  left: calc(50% - 47px);
+  font-size: 22px;
+}
+.new-chat-search input {
+  font-size: 16px;
+}
+.new-chat-options button {
+  gap: 18px;
+  padding: 17px 10px;
+}
+.new-chat-options svg {
+  width: 32px;
+  height: 32px;
+  flex-basis: 32px;
+}
+.new-chat-options strong {
+  font-size: 17px;
+}
+
+/* Final optical centering pass for every icon container */
+.icon-btn,
+.header-icon,
+.back-btn,
+.send-btn,
+.close-btn,
+.compose-action,
+.compose-toolbar button,
+.circle-action,
+.round-btn,
+.group-avatar,
+.search-result-avatar,
+.chat-avatar,
+.mini-avatar,
+.detail-avatar,
+.comment-avatar,
+.profile-avatar,
+.message-avatar,
+.big-avatar,
+.notify-icon,
+.unread-bubble,
+.badge,
+.nav-chat-badge,
+.nav-glyph,
+.new-chat-panel > header button,
+.emoji-picker button,
+.select-circle {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  line-height: 1;
+  text-align: center;
+}
+
+.icon-btn > svg,
+.header-icon > svg,
+.back-btn > svg,
+.send-btn > svg,
+.close-btn > svg,
+.compose-action > svg,
+.circle-action > svg,
+.round-btn > svg,
+.nav-glyph > svg,
+.new-chat-panel > header button > svg,
+.emoji-picker button > svg {
+  display: block;
+  margin: auto;
+  transform-origin: center;
+}
+
+/* Keep every navigation glyph on the same optical center line. */
+.nav-item.tab-btn .nav-icon {
+  transform: scale(1);
+  transform-origin: center;
+}
+
+.nav-item.tab-btn.active .nav-icon {
+  transform: scale(1.04);
+}
+
+/* The dark-mode publish control previously rendered white-on-white. */
+html[data-theme="dark"] .publish-btn {
+  background: #25262b;
+  color: #f5f5f7;
+}
+
+/* Long-press message actions */
+.message {
+  position: relative;
+  -webkit-touch-callout: none;
+}
+
+.message > .bubble-wrap {
+  transition: transform .18s cubic-bezier(.22, 1, .36, 1), opacity .18s ease;
+}
+
+.message.message-pressing > .bubble-wrap {
+  transform: scale(.985);
+  opacity: .88;
+}
+
+.message.context-target .bubble {
+  outline: 2px solid rgba(70, 153, 242, .72);
+  outline-offset: 2px;
+}
+
+.bubble {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.forwarded-label {
+  display: block;
+  margin-bottom: 3px;
+  color: #7c8792;
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.reply-quote {
+  display: grid;
+  grid-template-columns: 3px minmax(0, 1fr);
+  gap: 7px;
+  margin: 0 0 7px;
+  padding: 5px 7px;
+  border-radius: 8px;
+  background: rgba(62, 126, 193, .1);
+}
+
+.reply-quote::before {
+  content: "";
+  border-radius: 99px;
+  background: #4e98e8;
+}
+
+.reply-quote strong,
+.reply-quote span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reply-quote strong {
+  color: #3479c2;
+  font-size: 9px;
+}
+
+.reply-quote span {
+  margin-top: 2px;
+  color: #6a7580;
+  font-size: 10px;
+}
+
+.message-action-layer {
+  position: absolute;
+  z-index: 22;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .2s ease, visibility 0s linear .22s;
+}
+
+.message-action-layer.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .2s ease, visibility 0s linear 0s;
+}
+
+.message-action-scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: rgba(18, 25, 34, .08);
+  backdrop-filter: blur(1.5px);
+}
+
+.message-action-cluster {
+  position: absolute;
+  top: var(--message-actions-y, 80px);
+  left: var(--message-actions-x, 12px);
+  width: min(306px, calc(100% - 24px));
+  transform: translateY(8px) scale(.97);
+  transform-origin: top left;
+  transition: transform .26s cubic-bezier(.22, 1, .36, 1);
+}
+
+.message-action-layer.open .message-action-cluster {
+  transform: translateY(0) scale(1);
+}
+
+.message-reaction-bar,
+.message-context-menu {
+  border: 1px solid rgba(255, 255, 255, .72);
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, .92), rgba(231, 245, 255, .72)),
+    rgba(242, 249, 255, .82);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .96),
+    0 18px 45px rgba(37, 64, 92, .18);
+  backdrop-filter: blur(26px) saturate(165%);
+  -webkit-backdrop-filter: blur(26px) saturate(165%);
+}
+
+.message-reaction-bar {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 2px;
+  width: 100%;
+  padding: 6px;
+  border-radius: 24px;
+}
+
+.message-reaction-bar button {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  height: 38px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  font-size: 23px;
+  line-height: 1;
+  transition: transform .16s ease, background-color .16s ease;
+}
+
+.message-reaction-bar button:active {
+  transform: scale(.84);
+  background: rgba(255, 255, 255, .5);
+}
+
+.message-reaction-bar .message-reaction-more {
+  color: #6f7e8d;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 29px;
+  font-weight: 300;
+  transform: translateY(-3px);
+}
+
+.message-context-menu {
+  width: 218px;
+  margin: 7px 0 0 11px;
+  padding: 8px 12px;
+  border-radius: 25px;
+}
+
+.message-context-menu button {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  min-height: 45px;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: #1f2933;
+  text-align: left;
+  transition: background-color .16s ease, transform .16s ease;
+}
+
+.message-context-menu button:active {
+  transform: scale(.97);
+  background: rgba(52, 120, 246, .08);
+}
+
+.message-context-menu button svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.message-context-menu button span {
+  font-size: 15px;
+  letter-spacing: -.1px;
+}
+
+.message-context-menu button.danger {
+  color: #f04452;
+}
+
+.message-context-separator {
+  height: 1px;
+  margin: 5px 2px;
+  background: rgba(67, 85, 104, .18);
+}
+
+.reply-preview {
+  position: relative;
+  z-index: 5;
+  display: grid;
+  grid-template-columns: 3px minmax(0, 1fr) 32px;
+  align-items: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 6px 9px 6px 12px;
+  border-top: 1px solid rgba(221, 228, 236, .9);
+  background: rgba(255, 255, 255, .95);
+  animation: reply-preview-in .24s cubic-bezier(.22, 1, .36, 1) both;
+}
+
+.reply-preview[hidden] {
+  display: none;
+}
+
+.reply-preview-line {
+  align-self: stretch;
+  border-radius: 99px;
+  background: #4d95e8;
+}
+
+.reply-preview div {
+  min-width: 0;
+}
+
+.reply-preview strong,
+.reply-preview div span {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reply-preview strong {
+  color: #2f83dd;
+  font-size: 10px;
+}
+
+.reply-preview div span {
+  margin-top: 2px;
+  color: #747d86;
+  font-size: 11px;
+}
+
+.reply-preview button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(122, 135, 148, .1);
+  color: #67717b;
+  font-size: 22px;
+}
+
+@keyframes reply-preview-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message-selection-bar {
+  position: absolute;
+  z-index: 18;
+  right: 12px;
+  bottom: calc(63px + env(safe-area-inset-bottom, 0px));
+  left: 12px;
+  display: grid;
+  grid-template-columns: auto auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border: 1px solid rgba(255, 255, 255, .7);
+  border-radius: 19px;
+  background: rgba(247, 251, 255, .88);
+  box-shadow: 0 12px 30px rgba(28, 50, 76, .2);
+  backdrop-filter: blur(20px) saturate(150%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity .2s ease, transform .24s cubic-bezier(.22, 1, .36, 1), visibility 0s linear .24s;
+}
+
+.chat-page.message-selecting .message-selection-bar {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition: opacity .2s ease, transform .24s cubic-bezier(.22, 1, .36, 1), visibility 0s linear 0s;
+}
+
+.message-selection-bar button {
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 99px;
+  background: rgba(70, 126, 190, .1);
+  color: #286fbf;
+  font-size: 11px;
+}
+
+.message-selection-bar button.danger {
+  background: rgba(240, 68, 82, .1);
+  color: #e33d4b;
+}
+
+.message-selection-bar span {
+  justify-self: center;
+  color: #68737e;
+  font-size: 10px;
+}
+
+.message.selected-for-action .bubble {
+  outline: 2px solid #4b98ea;
+  outline-offset: 2px;
+}
+
+.message.selected-for-action::after {
+  content: "✓";
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #3989e8;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.message.selected-for-action.mine::after {
+  right: -6px;
+  left: auto;
+}
+
+/* Multi-select: controls stay in the left gutter while message content aligns right. */
+.chat-page.message-selecting .message-list {
+  padding-left: 56px;
+  padding-right: 20px;
+}
+
+.chat-page.message-selecting .message {
+  align-self: stretch;
+  flex-direction: row;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 100%;
+}
+
+.chat-page.message-selecting .message-avatar {
+  display: none;
+}
+
+.chat-page.message-selecting .bubble-wrap {
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: 0;
+}
+
+.chat-page.message-selecting .message.mine {
+  justify-content: flex-end;
+}
+
+.chat-page.message-selecting .message.mine .bubble-wrap {
+  margin-right: 0;
+  margin-left: auto;
+}
+
+.chat-page.message-selecting .message:not(.mine) .sender-name {
+  margin-right: 0;
+  margin-left: 4px;
+  text-align: left;
+}
+
+.chat-page.message-selecting .message.mine .sender-name {
+  margin-right: 4px;
+  margin-left: 0;
+  text-align: right;
+}
+
+.chat-page.message-selecting .message:not(.selected-for-action)::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -46px;
+  width: 25px;
+  height: 25px;
+  border: 1.5px solid rgba(105, 118, 132, .42);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .34);
+  transform: translateY(-50%);
+}
+
+.chat-page.message-selecting .message.selected-for-action::after {
+  top: 50%;
+  right: auto;
+  left: -46px;
+  width: 25px;
+  height: 25px;
+  transform: translateY(-50%);
+}
+
+.message-forward-modal {
+  position: fixed;
+  z-index: 70;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  background: rgba(18, 24, 31, .34);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
+  transition: opacity .2s ease, visibility 0s linear .22s;
+}
+
+.message-forward-modal.open {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity .2s ease, visibility 0s linear 0s;
+}
+
+.message-forward-panel {
+  width: min(350px, 100%);
+  padding: 17px;
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-radius: 24px;
+  background: rgba(248, 251, 255, .94);
+  box-shadow: 0 28px 70px rgba(25, 38, 54, .24);
+  backdrop-filter: blur(28px) saturate(160%);
+  transform: translateY(14px) scale(.97);
+  transition: transform .25s cubic-bezier(.22, 1, .36, 1);
+}
+
+.message-forward-modal.open .message-forward-panel {
+  transform: translateY(0) scale(1);
+}
+
+.message-forward-panel header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 1px 1px 12px;
+}
+
+.message-forward-panel h2,
+.message-forward-panel p {
+  margin: 0;
+}
+
+.message-forward-panel h2 {
+  font-size: 18px;
+}
+
+.message-forward-panel p {
+  margin-top: 4px;
+  color: #7b858e;
+  font-size: 10px;
+}
+
+.message-forward-panel header button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(86, 106, 127, .1);
+  color: #596572;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.message-forward-list {
+  display: grid;
+  gap: 5px;
+  max-height: min(400px, 55vh);
+  overflow-y: auto;
+}
+
+.message-forward-list button {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 9px;
+  border: 0;
+  border-radius: 14px;
+  background: rgba(82, 124, 167, .06);
+  color: #29323b;
+  text-align: left;
+}
+
+.message-forward-list button strong,
+.message-forward-list button span {
+  display: block;
+}
+
+.message-forward-list button strong {
+  font-size: 12px;
+}
+
+.message-forward-list button span {
+  margin-top: 2px;
+  overflow: hidden;
+  color: #7b858f;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message-forward-avatar {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 750;
+}
+
+html[data-theme="dark"] .reply-quote {
+  background: rgba(89, 151, 219, .16);
+}
+
+html[data-theme="dark"] .forwarded-label {
+  color: #a3abb5;
+}
+
+html[data-theme="dark"] .reply-quote strong {
+  color: #8fc5ff;
+}
+
+html[data-theme="dark"] .reply-quote span,
+html[data-theme="dark"] .reply-preview div span,
+html[data-theme="dark"] .message-selection-bar span,
+html[data-theme="dark"] .message-forward-panel p,
+html[data-theme="dark"] .message-forward-list button span {
+  color: #9ca4af;
+}
+
+html[data-theme="dark"] .message-reaction-bar,
+html[data-theme="dark"] .message-context-menu,
+html[data-theme="dark"] .message-selection-bar,
+html[data-theme="dark"] .message-forward-panel {
+  border-color: rgba(255, 255, 255, .12);
+  background:
+    linear-gradient(145deg, rgba(42, 44, 50, .95), rgba(28, 30, 35, .9)),
+    #202126;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .08),
+    0 22px 55px rgba(0, 0, 0, .42);
+}
+
+html[data-theme="dark"] .message-context-menu button,
+html[data-theme="dark"] .message-forward-panel h2,
+html[data-theme="dark"] .message-forward-list button {
+  color: #f1f2f4;
+}
+
+html[data-theme="dark"] .message-context-menu button.danger,
+html[data-theme="dark"] .message-selection-bar button.danger {
+  color: #ff6875;
+}
+
+html[data-theme="dark"] .message-context-separator {
+  background: rgba(255, 255, 255, .12);
+}
+
+html[data-theme="dark"] .reply-preview {
+  border-color: rgba(255, 255, 255, .1);
+  background: rgba(18, 19, 22, .97);
+}
+
+html[data-theme="dark"] .reply-preview button,
+html[data-theme="dark"] .message-forward-panel header button {
+  background: rgba(255, 255, 255, .08);
+  color: #d4d7dc;
+}
+
+html[data-theme="dark"] .message-forward-list button {
+  background: rgba(255, 255, 255, .05);
+}
+
+html[data-theme="dark"] .chat-page.message-selecting .message:not(.selected-for-action)::before {
+  border-color: rgba(220, 226, 234, .45);
+  background: rgba(255, 255, 255, .05);
+}
+
+html[data-theme="dark"] .message-action-scrim {
+  background: rgba(0, 0, 0, .24);
+}
+
+/* Comment entry rows */
+.post-comment-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  min-height: 34px;
+  margin-top: 7px;
+  padding: 5px 7px;
+  border: 1px solid rgba(102, 164, 232, .16);
+  border-radius: 10px;
+  background: rgba(238, 247, 255, .72);
+  color: #4b98e9;
+  font-size: 10px;
+  line-height: 1;
+  text-align: left;
+}
+
+.post-comment-icon {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 8px;
+  background: rgba(91, 159, 235, .11);
+}
+
+.post-comment-icon svg {
+  width: 16px;
+  height: 16px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
+.post-comment-arrow {
+  justify-self: end;
+  color: #4198f1;
+  font-family: "Segoe UI", sans-serif;
+  font-size: 19px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.detail-comment-entry {
+  margin-top: 13px;
+  padding: 9px 10px;
+  border-color: rgba(80, 156, 236, .2);
+  border-radius: 13px;
+  color: #2f8fe8;
+  font-size: 12px;
+}
+
+.detail-comment-entry .post-comment-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+}
+
+.detail-comment-entry .post-comment-icon svg {
+  width: 19px;
+  height: 19px;
+}
+
+.detail-comment-entry .post-comment-arrow {
+  font-size: 23px;
+}
+
+html[data-theme="dark"] .post-comment-row {
+  border-color: rgba(115, 178, 245, .16);
+  background: rgba(70, 125, 184, .13);
+  color: #83bdff;
+}
+
+html[data-theme="dark"] .post-comment-icon {
+  background: rgba(96, 164, 240, .13);
+}
+
+html[data-theme="dark"] .post-comment-arrow {
+  color: #75b7ff;
+}
+
+/* Posts were removed from the product; keep the remaining navigation evenly distributed. */
+.bottom-nav {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+}
+
+body[data-view] .bottom-nav {
+  width: min(204px, calc(100% - 64px));
+  padding-right: 10px;
+  padding-left: 10px;
+}
+
+.notify-action {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, .68);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .68);
+  color: #30353b;
+  font-size: 19px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .9), 0 5px 15px rgba(44, 61, 82, .08);
+}
+
+.notify-action .badge {
+  top: -2px;
+  right: -3px;
+}
+
+html[data-theme="dark"] .notify-action {
+  border-color: rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .08);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08);
+}
+
+/* Message cards with reactions and a comment entry */
+.message {
+  max-width: min(90%, 440px);
+}
+
+.message-avatar {
+  flex-basis: 34px;
+  width: 34px;
+  height: 34px;
+  font-size: 11px;
+}
+
+.message .bubble {
+  position: relative;
+  padding: 9px 12px 7px;
+  overflow: visible;
+  border-radius: 17px;
+  background: rgba(255, 255, 255, .94);
+  white-space: normal;
+}
+
+.message:not(.mine) .bubble::after,
+.message.mine .bubble::after {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  width: 13px;
+  height: 14px;
+  background: inherit;
+}
+
+.message:not(.mine) .bubble::after {
+  left: -6px;
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.message.mine .bubble::after {
+  right: -6px;
+  background: #dfeeff;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.message.mine .bubble {
+  background: #dfeeff;
+}
+
+.message-sender-row {
+  padding: 0 0 5px;
+  border: 0;
+  background: transparent;
+  color: #d88a3e;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.message-content {
+  padding: 0;
+  font-size: 15px;
+  line-height: 1.42;
+  white-space: pre-wrap;
+}
+
+.message-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 22px;
+  padding: 7px 0 0;
+}
+
+.message-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.message-reaction-pill {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  padding: 2px 7px 2px 4px;
+  border: 1px solid rgba(118, 166, 221, .14);
+  border-radius: 999px;
+  background: rgba(226, 241, 255, .78);
+  color: #4d94d9;
+  font-size: 12px;
+  line-height: 1;
+}
+
+.message-reaction-pill span {
+  font-size: 10px;
+}
+
+.message-reaction-pill.active {
+  border-color: rgba(61, 137, 225, .34);
+  background: rgba(200, 229, 255, .92);
+  color: #267bcf;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .75);
+}
+
+.message-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.message-time {
+  color: #87909a;
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.message-comment-row {
+  display: none;
+}
+
+.chat-page.message-selecting .message-sender-row {
+  margin: 0;
+  text-align: left;
+}
+
+html[data-theme="dark"] .message-sender-row {
+  border: 0;
+  background: transparent;
+  color: #e7a556;
+}
+
+html[data-theme="dark"] .message-reaction-pill {
+  border-color: rgba(110, 178, 255, .13);
+  background: rgba(74, 139, 215, .15);
+  color: #8fc5ff;
+}
+
+html[data-theme="dark"] .message-reaction-pill.active {
+  border-color: rgba(112, 183, 255, .4);
+  background: rgba(56, 119, 188, .36);
+  color: #b8dcff;
+}
+
+html[data-theme="dark"] .message-time {
+  color: #8c949e;
+}
+
+html[data-theme="dark"] .message .bubble {
+  background: #202126;
+}
+
+html[data-theme="dark"] .message.mine .bubble::after {
+  background: #22364b;
+}
+
+/* Harmonize the two compact header actions. */
+.telegram-actions {
+  gap: 10px;
+}
+
+.telegram-actions .compose-action,
+.telegram-actions .notify-action {
+  width: 44px;
+  height: 44px;
+}
+
+.telegram-actions .compose-action svg {
+  width: 20px;
+  height: 20px;
+  stroke-width: 2;
+}
+
+/* Push the current chat view back while the add-conversation sheet is open. */
+.app-shell,
+.bottom-nav {
+  transition:
+    transform .38s cubic-bezier(.22, 1, .36, 1),
+    filter .3s ease,
+    opacity .3s ease,
+    border-radius .38s cubic-bezier(.22, 1, .36, 1);
+}
+
+body.depth-stack .app-shell {
+  overflow: hidden;
+  border-radius: 24px;
+  filter: brightness(.9) saturate(.93);
+  transform: translateY(9px) scale(.955);
+  transform-origin: top center;
+}
+
+body.depth-stack .bottom-nav {
+  opacity: .9;
+  transform: translate(-50%, 9px) scale(.94);
+}
+
+.mention-preview-flag {
+  color: #ef5362;
+  font-weight: 700;
+}
+
+body.depth-stack .new-chat-modal {
+  background: rgba(15, 18, 22, .12);
+}
+
+body.depth-stack #drawerScrim.show {
+  background: rgba(21, 29, 38, .12);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.settings-notify-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  margin-right: 5px;
+  padding: 0 5px;
+  border-radius: 99px;
+  background: #f04452;
+  color: #fff !important;
+  font-size: 9px !important;
+  font-weight: 750;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+.settings-notify-badge.hide {
+  display: none;
+}
+
+/* Notification center uses the same layered bottom-sheet motion. */
+#notificationDrawer {
+  top: auto;
+  right: auto;
+  bottom: 0;
+  left: 50%;
+  width: min(760px, 100%);
+  height: min(92dvh, 760px);
+  padding: 22px 18px calc(24px + env(safe-area-inset-bottom, 0px));
+  border: 1px solid rgba(255, 255, 255, .72);
+  border-bottom: 0;
+  border-radius: 34px 34px 0 0;
+  box-shadow: 0 -22px 65px rgba(22, 30, 40, .2);
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 108%);
+  transition:
+    transform .42s cubic-bezier(.22, 1, .36, 1),
+    opacity .26s ease,
+    visibility 0s linear .42s;
+  will-change: transform;
+}
+
+#notificationDrawer.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition:
+    transform .42s cubic-bezier(.22, 1, .36, 1),
+    opacity .2s ease,
+    visibility 0s linear 0s;
+}
+
+html[data-theme="dark"] #notificationDrawer {
+  border-color: rgba(255, 255, 255, .11);
+  box-shadow: 0 -22px 65px rgba(0, 0, 0, .48);
+}
+
   </style>
 </head>
-<body data-view="posts">
+<body data-view="forum">
   <div class="liquid-background" aria-hidden="true">
     <span class="liquid-orb orb-one"></span>
     <span class="liquid-orb orb-two"></span>
@@ -2207,68 +3996,29 @@ body[data-view] .bottom-nav .tab-indicator {
           <small><i></i> 724 人在线</small>
         </span>
       </div>
-      <div class="appbar-actions">
-        <button class="icon-btn" id="notifyBtn" aria-label="通知">
-          <span>🔔</span>
-          <b class="badge" id="notifyBadge">3</b>
-        </button>
-        <button class="icon-btn publish-btn" id="publishBtn" aria-label="发布">＋</button>
-      </div>
     </header>
 
     <main class="content">
-      <section class="view active" id="postsView">
-        <div class="page-heading">
-          <div>
-            <h1>发现</h1>
-            <p>分享校园生活，也问问大家的意见</p>
-          </div>
-          <span class="online-pill"><i></i> 在线</span>
-        </div>
-
-        <label class="search-box" id="postSearchBox">
-          <span>⌕</span>
-          <input id="postSearch" type="search" placeholder="搜索帖子、话题或问题" />
-        </label>
-
-        <div class="topic-scroller" id="postTopics">
-          <button class="topic-chip active" data-topic="推荐">推荐</button>
-          <button class="topic-chip" data-topic="校园生活">校园生活</button>
-          <button class="topic-chip" data-topic="学习互助">学习互助</button>
-          <button class="topic-chip" data-topic="宿舍日常">宿舍日常</button>
-          <button class="topic-chip" data-topic="随便聊聊">随便聊聊</button>
-        </div>
-
-        <div class="feed-label">
-          <h2 id="postFeedTitle">大家正在聊</h2>
-          <span id="postCount">7 篇</span>
-        </div>
-        <section class="post-grid" id="postGrid"></section>
-      </section>
-
-      <section class="view" id="forumView">
+      <section class="view active" id="forumView">
         <header class="telegram-header">
           <button class="edit-pill" id="editGroupsBtn">编辑</button>
           <div class="chat-heading">
             <strong>聊天</strong>
           </div>
           <div class="telegram-actions">
-            <button class="circle-action" id="forumAddBtn" aria-label="发布帖子"><span>＋</span></button>
             <button class="compose-action" id="forumComposeBtn" aria-label="打开新建对话">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="15" height="15" rx="2"/><path d="m8 16 10-9M14 7h4v4"/></svg>
+              <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <path d="M12 5v14M5 12h14"/>
+              </svg>
             </button>
           </div>
         </header>
         <label class="telegram-search">
-          <span>⌕</span>
-          <input id="groupSearch" type="search" placeholder="搜索" />
+          <input id="groupSearch" type="search" placeholder=" " aria-label="搜索聊天记录" />
+          <span class="telegram-search-prompt" aria-hidden="true"><b>⌕</b><span>搜索</span></span>
         </label>
         <section class="chat-search-results" id="chatSearchResults"></section>
         <section class="group-list" id="groupList"></section>
-        <div class="edit-action-bar" id="editActionBar">
-          <button id="markGroupsRead">全部已读</button>
-          <button id="deleteGroups">删除</button>
-        </div>
 
         <div class="home-note">
           <span>✦</span>
@@ -2276,21 +4026,12 @@ body[data-view] .bottom-nav .tab-indicator {
         </div>
       </section>
 
-      <section class="view" id="profileView">
-        <div class="profile-hero">
-          <div class="profile-avatar">我</div>
-          <h1>我</h1>
-          <p>学生 · 教室101 · 宿舍410</p>
-          <div class="profile-stats">
-            <button><strong id="myPostCount">1</strong><span>帖子</span></button>
-            <button><strong>128</strong><span>获赞</span></button>
-            <button><strong>3</strong><span>群聊</span></button>
+      <section class="view" id="settingsView">
+        <div class="page-heading">
+          <div>
+            <h1>设置</h1>
+            <p>外观、通知与账号</p>
           </div>
-        </div>
-        <div class="my-shortcuts">
-          <button data-my="posts"><span>▤</span><strong>我的帖子</strong><small>1</small></button>
-          <button data-my="saved"><span>☆</span><strong>我的收藏</strong><small>6</small></button>
-          <button data-my="mentions"><span>@</span><strong>收到的 @</strong><small>2</small></button>
         </div>
         <section class="appearance-card">
           <div><strong>外观</strong><span>浅色或黑夜模式</span></div>
@@ -2300,42 +4041,38 @@ body[data-view] .bottom-nav .tab-indicator {
           </div>
         </section>
         <div class="menu-card">
-          <button>通知设置 <span>›</span></button>
+          <button id="settingsNotificationsBtn">通知中心 <span><b class="settings-notify-badge" id="settingsNotifyBadge">0</b> ›</span></button>
           <button>学生认证 <span>已认证 · 教室101</span></button>
           <button>社区公约 <span>›</span></button>
           <button>关于西科乌托邦 <span>›</span></button>
         </div>
-        <p class="prototype-note">当前为交互原型，账号、消息和帖子数据保存在本机浏览器里。</p>
+        <p class="prototype-note">当前为交互原型，账号和聊天数据保存在本机浏览器里。</p>
       </section>
     </main>
   </div>
 
-  <nav class="bottom-nav" aria-label="底部导航">
+  <div class="edit-action-bar" id="editActionBar">
+    <button id="markGroupsRead">全部已读</button>
+    <button id="deleteGroups">删除</button>
+  </div>
+
+  <nav class="bottom-nav glass" aria-label="底部导航">
     <span class="tab-indicator" aria-hidden="true"></span>
-    <button class="nav-item tab-btn active" data-view="posts">
-      <span class="nav-glyph">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
-          <rect x="3.5" y="3.5" width="7.6" height="7.6" rx="2.2"></rect><rect x="12.9" y="3.5" width="7.6" height="7.6" rx="2.2"></rect><rect x="3.5" y="12.9" width="7.6" height="7.6" rx="2.2"></rect><rect x="12.9" y="12.9" width="7.6" height="7.6" rx="2.2"></rect>
-        </svg>
+    <button class="nav-item tab-btn active" data-view="forum" aria-label="聊天">
+      <span class="nav-content">
+        <span class="nav-glyph">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true"><path d="M4 4.2h10a4 4 0 0 1 4 4v3a4 4 0 0 1-4 4H9l-4 3v-3H4a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3Z"></path><path d="M10 17h5a4 4 0 0 0 4-4v-2.2a3 3 0 0 1 2 2.8v3a3 3 0 0 1-2 2.9v2l-3-2h-3a3 3 0 0 1-3-2.5Z" stroke="var(--nav-icon-cutout)" stroke-width="1.25"></path></svg>
+        </span>
+        <span class="nav-label">聊天</span>
       </span>
-      <span class="nav-label">帖子</span>
     </button>
-    <button class="nav-item tab-btn" data-view="forum">
-      <span class="nav-glyph">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" stroke="none" aria-hidden="true">
-          <path d="M4 4.2h10a4 4 0 0 1 4 4v3a4 4 0 0 1-4 4H9l-4 3v-3H4a3 3 0 0 1-3-3v-5a3 3 0 0 1 3-3Z"></path><path d="M10 17h5a4 4 0 0 0 4-4v-2.2a3 3 0 0 1 2 2.8v3a3 3 0 0 1-2 2.9v2l-3-2h-3a3 3 0 0 1-3-2.5Z" stroke="var(--nav-icon-cutout)" stroke-width="1.25"></path>
-        </svg>
-        <span class="nav-chat-badge" id="chatNavBadge">7</span>
+    <button class="nav-item tab-btn" data-view="settings" aria-label="设置">
+      <span class="nav-content">
+        <span class="nav-glyph">
+          <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" stroke="none" aria-hidden="true"><path d="M19.14 12.94a7.4 7.4 0 0 0 0-1.88l2.03-1.58a.49.49 0 0 0 .12-.62l-1.92-3.32a.49.49 0 0 0-.6-.22l-2.39.96a7.05 7.05 0 0 0-1.63-.95l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.56-1.63.95l-2.39-.96a.49.49 0 0 0-.6.22L2.7 8.86a.49.49 0 0 0 .12.62l2.03 1.58a7.4 7.4 0 0 0 0 1.88l-2.03 1.58a.49.49 0 0 0-.12.62l1.92 3.32c.12.22.37.29.6.22l2.39-.96c.5.39 1.04.71 1.63.95l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54c.59-.24 1.13-.56 1.63-.95l2.39.96c.22.08.48 0 .6-.22l1.92-3.32a.49.49 0 0 0-.12-.62l-2.03-1.58ZM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2Z"></path></svg>
+        </span>
+        <span class="nav-label">设置</span>
       </span>
-      <span class="nav-label">聊天</span>
-    </button>
-    <button class="nav-item tab-btn" data-view="profile">
-      <span class="nav-glyph">
-        <svg class="nav-icon" viewBox="0 0 24 24" fill="currentColor" fill-rule="evenodd" stroke="none" aria-hidden="true">
-          <path d="M19.14 12.94a7.4 7.4 0 0 0 0-1.88l2.03-1.58a.49.49 0 0 0 .12-.62l-1.92-3.32a.49.49 0 0 0-.6-.22l-2.39.96a7.05 7.05 0 0 0-1.63-.95l-.36-2.54a.48.48 0 0 0-.48-.41h-3.84a.48.48 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.56-1.63.95l-2.39-.96a.49.49 0 0 0-.6.22L2.7 8.86a.49.49 0 0 0 .12.62l2.03 1.58a7.4 7.4 0 0 0 0 1.88l-2.03 1.58a.49.49 0 0 0-.12.62l1.92 3.32c.12.22.37.29.6.22l2.39-.96c.5.39 1.04.71 1.63.95l.36 2.54c.04.24.24.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54c.59-.24 1.13-.56 1.63-.95l2.39.96c.22.08.48 0 .6-.22l1.92-3.32a.49.49 0 0 0-.12-.62l-2.03-1.58ZM12 15.6a3.6 3.6 0 1 1 0-7.2 3.6 3.6 0 0 1 0 7.2Z"></path>
-        </svg>
-      </span>
-      <span class="nav-label">设置</span>
     </button>
   </nav>
 
@@ -2352,6 +4089,66 @@ body[data-view] .bottom-nav .tab-indicator {
     <div class="pinned-bar"><span>⌖</span><p id="pinnedText"></p></div>
     <div class="chat-wallpaper"><div class="message-list" id="messageList"></div></div>
     <div class="mention-popover" id="mentionPopover"></div>
+    <div class="message-action-layer" id="messageActionLayer" aria-hidden="true">
+      <button class="message-action-scrim" type="button" data-close-message-actions aria-label="关闭消息菜单"></button>
+      <div class="message-action-cluster" id="messageActionCluster">
+        <div class="message-reaction-bar" role="toolbar" aria-label="回应消息">
+          <button type="button" data-message-reaction="❤️" aria-label="爱心">❤️</button>
+          <button type="button" data-message-reaction="👍" aria-label="赞">👍</button>
+          <button type="button" data-message-reaction="👎" aria-label="不赞同">👎</button>
+          <button type="button" data-message-reaction="🔥" aria-label="火">🔥</button>
+          <button type="button" data-message-reaction="🥰" aria-label="喜欢">🥰</button>
+          <button type="button" data-message-reaction="👏" aria-label="鼓掌">👏</button>
+          <button type="button" data-message-reaction="😄" aria-label="开心">😄</button>
+          <button type="button" class="message-reaction-more" id="messageReactionMore" aria-label="更多表情">⌄</button>
+        </div>
+        <div class="message-context-menu" role="menu" aria-label="消息操作">
+          <button type="button" role="menuitem" data-message-action="reply">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 8 4 12l5 4v-3h5.2c3.1 0 5.2 1.3 6.8 4-.3-4.3-2.8-7.2-6.8-7.2H9V8Z"/></svg>
+            <span>回复</span>
+          </button>
+          <button type="button" role="menuitem" data-message-action="copy">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+            <span>拷贝</span>
+          </button>
+          <button type="button" role="menuitem" data-message-action="speak">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 10v4h3l4 4V6L8 10H5Z"/><path d="M16 9c1.5 1.7 1.5 4.3 0 6M19 6c3.2 3.3 3.2 8.7 0 12"/></svg>
+            <span>朗读</span>
+          </button>
+          <button type="button" role="menuitem" data-message-action="forward">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 7 6 5-6 5v-3H9c-2.5 0-4.2.9-5.5 2.8.3-4.4 2.4-7 6.5-7H14V7Z"/></svg>
+            <span>转发</span>
+          </button>
+          <button type="button" role="menuitem" data-message-action="report">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v6M12 17h.01"/></svg>
+            <span>举报</span>
+          </button>
+          <button type="button" role="menuitem" class="danger" data-message-action="delete">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 7h14M9 7V4h6v3M8 10v8M12 10v8M16 10v8M7 7l1 14h8l1-14"/></svg>
+            <span>删除</span>
+          </button>
+          <div class="message-context-separator"></div>
+          <button type="button" role="menuitem" data-message-action="select">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.3 2.3 4.8-5"/></svg>
+            <span>选择</span>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="reply-preview" id="replyPreview" hidden>
+      <span class="reply-preview-line" aria-hidden="true"></span>
+      <div>
+        <strong id="replyPreviewName"></strong>
+        <span id="replyPreviewText"></span>
+      </div>
+      <button type="button" id="cancelReply" aria-label="取消回复">×</button>
+    </div>
+    <div class="message-selection-bar" id="messageSelectionBar" aria-hidden="true">
+      <button type="button" id="forwardSelectedMessages">转发</button>
+      <button type="button" id="cancelMessageSelection">取消</button>
+      <span id="messageSelectionCount">已选择 1 条</span>
+      <button type="button" class="danger" id="deleteSelectedMessages">删除</button>
+    </div>
     <footer class="chat-composer">
       <div class="compose-toolbar">
         <button id="mentionBtn">@</button>
@@ -2363,22 +4160,9 @@ body[data-view] .bottom-nav .tab-indicator {
     </footer>
   </section>
 
-  <section class="post-detail" id="postDetail" aria-label="帖子详情">
-    <header class="detail-header">
-      <button class="back-btn" id="backToPosts">‹</button>
-      <strong>帖子</strong>
-      <button class="header-icon" id="postMoreBtn">⋯</button>
-    </header>
-    <div class="detail-scroll" id="postDetailBody"></div>
-    <div class="comment-bar">
-      <input id="commentInput" placeholder="说点什么…" />
-      <button id="sendComment">发送</button>
-    </div>
-  </section>
-
   <aside class="drawer" id="notificationDrawer" aria-label="通知中心">
     <div class="drawer-head">
-      <div><h2>通知</h2><p>评论、点赞、@提及和系统公告</p></div>
+      <div><h2>通知</h2><p>聊天提及和系统公告</p></div>
       <button class="close-btn" data-close="notificationDrawer">×</button>
     </div>
     <div class="drawer-tools">
@@ -2402,39 +4186,6 @@ body[data-view] .bottom-nav .tab-indicator {
 
   <div class="drawer-scrim" id="drawerScrim"></div>
 
-  <section class="post-modal" id="postModal" aria-label="发布帖子">
-    <div class="post-sheet">
-      <div class="sheet-head">
-        <button id="cancelPost">取消</button>
-        <h2>发布帖子</h2>
-        <button class="primary-btn" id="submitPost">发布</button>
-      </div>
-      <div class="post-kind-tabs" id="postKindTabs">
-        <button class="active" data-kind="分享">分享日常</button>
-        <button data-kind="提问">提个问题</button>
-      </div>
-      <div class="compose-topics" id="composeTopics">
-        <button class="active" data-topic="校园生活">校园生活</button>
-        <button data-topic="学习互助">学习互助</button>
-        <button data-topic="宿舍日常">宿舍日常</button>
-        <button data-topic="随便聊聊">随便聊聊</button>
-      </div>
-      <input class="post-title-input" id="newPostTitle" maxlength="50" placeholder="写个吸引人的标题" />
-      <textarea class="post-content-input" id="newPostContent" rows="7" placeholder="分享新鲜事，或者把问题说清楚…"></textarea>
-      <div class="emoji-picker">
-        <span>选择封面图标</span>
-        <div id="emojiChoices">
-          <button class="active" data-emoji="🌇">🌇</button>
-          <button data-emoji="🍜">🍜</button>
-          <button data-emoji="📚">📚</button>
-          <button data-emoji="🛠">🛠</button>
-          <button data-emoji="🧋">🧋</button>
-          <button data-emoji="🎧">🎧</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <section class="new-chat-modal" id="newChatModal" aria-label="新建对话">
     <div class="new-chat-panel">
       <header>
@@ -2443,8 +4194,8 @@ body[data-view] .bottom-nav .tab-indicator {
         <span></span>
       </header>
       <label class="new-chat-search">
-        <span>⌕</span>
-        <input id="newChatSearch" type="search" placeholder="搜索" />
+        <input id="newChatSearch" type="search" placeholder=" " aria-label="搜索" />
+        <span class="new-chat-search-prompt" aria-hidden="true"><b>⌕</b><span>搜索</span></span>
       </label>
       <div class="new-chat-options" id="newChatOptions">
         <button data-new-chat="group">
@@ -2484,7 +4235,263 @@ body[data-view] .bottom-nav .tab-indicator {
     </div>
   </section>
 
+  <section class="message-forward-modal" id="messageForwardModal" aria-label="转发消息">
+    <div class="message-forward-panel">
+      <header>
+        <div>
+          <h2>转发到</h2>
+          <p>选择一个群聊发送</p>
+        </div>
+        <button type="button" id="closeMessageForward" aria-label="关闭">×</button>
+      </header>
+      <div class="message-forward-list" id="messageForwardList"></div>
+    </div>
+  </section>
+
   <div class="toast" id="toast"></div>
+  <script>
+/* glass.js — 液态玻璃（框架无关：一条 <script> + 一组 CSS 变量）
+ *
+ * 思路来自 Shu Ding 的 liquid-glass / liquid-diamond（SVG 位移滤镜那一路）：
+ *   1. 用 canvas 按元素自己的尺寸和圆角，逐像素算出一张位移贴图：
+ *      R 通道存 X 位移、G 通道存 Y 位移，0.5 表示不动；
+ *      "离边缘越近，采样点越往中心拉"，形成边缘的凸起折射；
+ *   2. 这张贴图交给 feDisplacementMap，作为 backdrop-filter 作用在元素背后；
+ *   3. 模糊和饱和度也放在滤镜内部，避免和 url() 抢同一条 backdrop-filter。
+ *
+ * 用法：容器加 .glass 类即可，脚本会自动扫描、按尺寸生成贴图，
+ *      尺寸变化（转屏、拉伸）时自动重算。
+ * 调参：CSS 变量 --lg-*（见 styles.css 的 :root）。
+ */
+(function () {
+  "use strict";
+
+  var FILTER_ID = "lg-refract";
+  var SVG_ID = "lg-glass-defs";
+  /* 贴图是一张平滑的位移场，不需要按屏幕像素精度来算：
+     限制采样密度可以显著降低每次重算的开销（切页时的"卡一下"就来自这里） */
+  var MAP_DPI = Math.min(1.5, window.devicePixelRatio || 1);
+  var MAP_MAX_WIDTH = 480;
+
+  var svg = null;
+  var feMap = null;
+  var feDisp = null;
+  var feBlur = null;
+  var feSat = null;
+  var current = null; // 当前贴图对应的签名，避免重复计算
+
+  /* ---------- 数学小工具（和参考实现一致） ---------- */
+
+  function clamp(value, min, max) {
+    return value < min ? min : value > max ? max : value;
+  }
+
+  function smoothStep(a, b, t) {
+    t = clamp((t - a) / (b - a), 0, 1);
+    return t * t * (3 - 2 * t);
+  }
+
+  /* 圆角矩形的有符号距离：内部为负、边缘为 0、外部为正 */
+  function roundedRectSDF(x, y, halfWidth, halfHeight, radius) {
+    var qx = Math.abs(x) - halfWidth + radius;
+    var qy = Math.abs(y) - halfHeight + radius;
+    var outside = Math.sqrt(Math.max(qx, 0) * Math.max(qx, 0) + Math.max(qy, 0) * Math.max(qy, 0));
+    return Math.min(Math.max(qx, qy), 0) + outside - radius;
+  }
+
+  function cssNumber(name, fallback) {
+    var raw = getComputedStyle(document.documentElement).getPropertyValue(name);
+    var value = parseFloat(raw);
+    return isFinite(value) ? value : fallback;
+  }
+
+  /* ---------- 生成位移贴图 ---------- */
+
+  function buildMapData(width, height, radius, band, strength) {
+    var scaleToFit = Math.min(1, MAP_MAX_WIDTH / Math.max(1, width));
+    var dpi = MAP_DPI * scaleToFit;
+    var w = Math.max(1, Math.round(width * dpi));
+    var h = Math.max(1, Math.round(height * dpi));
+    var bandPx = Math.max(1, band * dpi);
+    var halfW = w / 2;
+    var halfH = h / 2;
+    var r = Math.min(radius * dpi, halfH, halfW);
+
+    var canvas = document.createElement("canvas");
+    canvas.width = w;
+    canvas.height = h;
+    var ctx = canvas.getContext("2d");
+    var image = ctx.createImageData(w, h);
+    var data = image.data;
+    var deltas = new Float32Array(w * h * 2);
+    var maxDelta = 0;
+
+    for (var y = 0; y < h; y++) {
+      for (var x = 0; x < w; x++) {
+        var dx = x + 0.5 - halfW;
+        var dy = y + 0.5 - halfH;
+        var distance = -roundedRectSDF(dx, dy, halfW, halfH, r); // 距边缘的深度，内部为正
+        var weight = 1 - smoothStep(0, bandPx, distance); // 贴边处最强，深入内部衰减到 0
+        var pull = weight * strength;
+        var moveX = dx * -pull; // 朝中心拉
+        var moveY = dy * -pull;
+        var index = (y * w + x) * 2;
+        deltas[index] = moveX;
+        deltas[index + 1] = moveY;
+        var magnitude = Math.max(Math.abs(moveX), Math.abs(moveY));
+        if (magnitude > maxDelta) maxDelta = magnitude;
+      }
+    }
+
+    var scale = maxDelta > 0 ? maxDelta : 1;
+    for (var i = 0, p = 0; p < deltas.length; i += 4, p += 2) {
+      // 0.5 是"不动"，向两侧展开
+      data[i] = Math.round((deltas[p] / scale + 0.5) * 255);
+      data[i + 1] = Math.round((deltas[p + 1] / scale + 0.5) * 255);
+      data[i + 2] = 128;
+      data[i + 3] = 255;
+    }
+    ctx.putImageData(image, 0, 0);
+    return { url: canvas.toDataURL(), scale: scale / dpi };
+  }
+
+  /* ---------- SVG 滤镜 ---------- */
+
+  function ensureSvg() {
+    if (svg) return;
+    var NS = "http://www.w3.org/2000/svg";
+    svg = document.createElementNS(NS, "svg");
+    svg.setAttribute("id", SVG_ID);
+    svg.setAttribute("width", "0");
+    svg.setAttribute("height", "0");
+    svg.setAttribute("aria-hidden", "true");
+    svg.style.cssText = "position:absolute;pointer-events:none";
+
+    var defs = document.createElementNS(NS, "defs");
+    var filter = document.createElementNS(NS, "filter");
+    filter.setAttribute("id", FILTER_ID);
+    filter.setAttribute("color-interpolation-filters", "sRGB");
+    filter.setAttribute("x", "-20%");
+    filter.setAttribute("y", "-20%");
+    filter.setAttribute("width", "140%");
+    filter.setAttribute("height", "140%");
+
+    feBlur = document.createElementNS(NS, "feGaussianBlur");
+    feBlur.setAttribute("in", "SourceGraphic");
+    feBlur.setAttribute("result", "BLURRED");
+    feBlur.setAttribute("stdDeviation", "0");
+
+    feSat = document.createElementNS(NS, "feColorMatrix");
+    feSat.setAttribute("type", "saturate");
+    feSat.setAttribute("values", "1");
+
+    feMap = document.createElementNS(NS, "feImage");
+    feMap.setAttribute("x", "0");
+    feMap.setAttribute("y", "0");
+    feMap.setAttribute("preserveAspectRatio", "none");
+    feMap.setAttribute("result", "MAP");
+
+    feDisp = document.createElementNS(NS, "feDisplacementMap");
+    feDisp.setAttribute("in", "BLURRED");
+    feDisp.setAttribute("in2", "MAP");
+    feDisp.setAttribute("xChannelSelector", "R");
+    feDisp.setAttribute("yChannelSelector", "G");
+    feDisp.setAttribute("scale", "0");
+
+    filter.appendChild(feBlur);
+    filter.appendChild(feSat);
+    filter.appendChild(feMap);
+    filter.appendChild(feDisp);
+    defs.appendChild(filter);
+    svg.appendChild(defs);
+    document.body.appendChild(svg);
+  }
+
+  function supportsBackdropUrl() {
+    if (!window.CSS || !CSS.supports) return false;
+    return CSS.supports("backdrop-filter", "url(#a)") || CSS.supports("-webkit-backdrop-filter", "url(#a)");
+  }
+
+  /* ---------- 应用到元素 ---------- */
+
+  function applyTo(el) {
+    ensureSvg();
+    var rect = el.getBoundingClientRect();
+    if (rect.width < 4 || rect.height < 4) return; // 还没布局
+
+    var radius = parseFloat(getComputedStyle(el).borderTopLeftRadius) || 0;
+    var band = cssNumber("--lg-refract-band", 20);
+    var strength = cssNumber("--lg-refract-strength", 0.12);
+    var blur = cssNumber("--lg-blur", 14);
+    var saturate = cssNumber("--lg-saturate", 175) / 100;
+
+    // 尺寸按 4px 取整：滚动条出现之类造成的 1px 变化不值得重算贴图
+    var signature =
+      Math.round(rect.width / 4) * 4 +
+      "x" +
+      Math.round(rect.height / 4) * 4 +
+      ":" +
+      radius +
+      ":" +
+      band +
+      ":" +
+      strength +
+      ":" +
+      blur +
+      ":" +
+      saturate;
+    if (signature !== current) {
+      var map = buildMapData(rect.width, rect.height, radius, band, strength);
+      feMap.setAttribute("width", String(rect.width));
+      feMap.setAttribute("height", String(rect.height));
+      feMap.setAttributeNS("http://www.w3.org/1999/xlink", "href", map.url);
+      feMap.setAttribute("href", map.url);
+      feDisp.setAttribute("scale", String(map.scale));
+      feBlur.setAttribute("stdDeviation", String(blur));
+      feSat.setAttribute("values", String(saturate));
+      current = signature;
+    }
+
+    if (supportsBackdropUrl()) {
+      // 模糊、饱和度、折射都在这个滤镜里完成（Chromium）
+      el.style.webkitBackdropFilter = "url(#" + FILTER_ID + ")";
+      el.style.backdropFilter = "url(#" + FILTER_ID + ")";
+    }
+  }
+
+  function scan() {
+    var nodes = document.querySelectorAll(".glass");
+    for (var i = 0; i < nodes.length; i++) applyTo(nodes[i]);
+  }
+
+  var scanTimer = null;
+  function scheduleScan() {
+    clearTimeout(scanTimer);
+    /* 等 350ms 再扫：切页签时胶囊正在做 380ms 的形变动画，
+       如果这时候重算位移贴图（要跑一遍 canvas 逐像素循环）会占住主线程、把动画卡掉。 */
+    scanTimer = setTimeout(scan, 350);
+  }
+
+  function start() {
+    if (!document.body) return;
+    scan();
+    window.addEventListener("resize", scheduleScan);
+    if (window.MutationObserver) {
+      // 只盯住 #app 的直接子节点：切页签会把底栏整个重建，这时要重新贴一次样式。
+      // 不递归观察子树，避免每秒计时器刷新也触发扫描。
+      var app = document.getElementById("app");
+      if (app) new MutationObserver(scheduleScan).observe(app, { childList: true });
+    }
+  }
+
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", start);
+  else start();
+
+  // 想手动调用也行（框架里可以只留这一段）
+  window.LiquidGlass = { apply: applyTo, refresh: scheduleScan, scan: scan };
+})();
+
+  </script>
   <script>
 const groupSeed = [
   {
@@ -2524,36 +4531,30 @@ const groupSeed = [
   }
 ];
 
-const postSeed = [
-  { id: "p1", kind: "分享", category: "校园生活", title: "操场晚霞也太好看了，随手一拍都是壁纸", body: "今天下课经过操场，天空是粉橘色的。最近天气开始凉了，傍晚去走两圈很舒服。", emoji: "🌇", gradient: "linear-gradient(145deg,#ff916e,#ffc587)", caption: "今日晚霞", author: "林同学", likes: 289, comments: 16, tall: true, liked: false, saved: false, time: "10:46", replies: [{ author: "小陈", text: "这也太好看了！", time: "刚刚" }] },
-  { id: "p2", kind: "提问", category: "学习互助", title: "高数期中怎么复习效率比较高？有没有一起自习的", body: "极限和中值定理一直不太熟，想约教室215的同学一起整理题型，有愿意的吗？", emoji: "📚", gradient: "linear-gradient(145deg,#7198ef,#aac8ff)", caption: "学习互助", author: "豆豆", likes: 48, comments: 23, tall: false, liked: true, saved: true, time: "09:37", replies: [{ author: "阿杰", text: "可以，下午四点教室215见。", time: "10:02" }] },
-  { id: "p3", kind: "分享", category: "校园生活", title: "食堂二楼新窗口测评：牛肉面值得排队吗", body: "牛肉给得很足，汤底偏浓，分量也够。中午高峰大概排十分钟。", emoji: "🍜", gradient: "linear-gradient(145deg,#f9a05d,#ffd5a5)", caption: "校园美食", author: "小陈", likes: 126, comments: 31, tall: false, liked: false, saved: false, time: "08:51", replies: [{ author: "豆豆", text: "晚上还有吗？", time: "09:04" }] },
-  { id: "p4", kind: "提问", category: "宿舍日常", title: "宿舍空调不制热，除了小程序还能怎么报修？", body: "宿舍410报修两天没进度，管理员说下午来看。大家有好用的报修渠道吗？", emoji: "🛠", gradient: "linear-gradient(145deg,#48b394,#a8ead4)", caption: "宿舍求助", author: "阿杰", likes: 22, comments: 12, tall: true, liked: false, saved: false, time: "昨天", replies: [{ author: "老王", text: "直接找宿管群管理员最快。", time: "昨天" }] },
-  { id: "p5", kind: "分享", category: "校园生活", title: "整理了一份新生校园地图，食堂快递点全标了", body: "把教学楼、食堂、快递站和常用打印店都标在一起了，需要的同学留言。", emoji: "🗺️", gradient: "linear-gradient(145deg,#4fa9c8,#a3dcea)", caption: "校园指南", author: "我", likes: 18, comments: 7, tall: false, liked: false, saved: true, time: "昨天", replies: [{ author: "豆豆", text: "太实用了，收藏！", time: "昨天" }] },
-  { id: "p6", kind: "提问", category: "随便聊聊", title: "学校附近有安静一点、适合通宵赶作业的地方吗", body: "图书馆十点闭馆，想找个能待到晚一点的地方，最好有插座。", emoji: "🧋", gradient: "linear-gradient(145deg,#b788d8,#e2c4f2)", caption: "求推荐", author: "可乐", likes: 63, comments: 18, tall: false, liked: false, saved: false, time: "昨天", replies: [{ author: "小陈", text: "东门那家自习室可以到十二点。", time: "昨天" }] },
-  { id: "p7", kind: "分享", category: "学习互助", title: "英语听力耳机到底买哪种？不同型号实测感受", body: "整理了学校考试指定频段和几款耳机的使用体验，给需要考听力的同学避坑。", emoji: "🎧", gradient: "linear-gradient(145deg,#5a72c9,#b3bdf0)", caption: "学习经验", author: "林同学", likes: 92, comments: 14, tall: true, liked: false, saved: false, time: "前天", replies: [{ author: "阿杰", text: "求具体型号！", time: "昨天" }] }
-];
-
 const notificationSeed = [
-  { id: "n1", type: "comment", title: "有人评论了你的帖子", text: "小陈：这张晚霞太好看了！", time: "刚刚", unread: true, target: "p1" },
-  { id: "n2", type: "like", title: "你的帖子收到新点赞", text: "《整理了一份新生校园地图》收到了 18 个赞。", time: "12 分钟前", unread: true, target: "p5" },
-  { id: "n3", type: "mention", title: "论坛里有人 @了你", text: "豆豆在教学论坛提到了教室215。", time: "1 小时前", unread: true, group: "teaching" },
+  { id: "n3", type: "mention", title: "论坛里有人 @了你", text: "豆豆：已经放到班级共享盘，文件名是“高数期中复习”。", time: "1 小时前", unread: true, group: "teaching", messageId: "t4" },
   { id: "n4", type: "system", title: "系统通知", text: "明天 8:00-11:00 全校停水，请提前储水。", time: "昨天", unread: false }
 ];
 
 let groups = loadStored("campus-community-groups-v7", groupSeed);
-let posts = loadStored("campus-community-posts-v7", postSeed);
 let notifications = loadStored("campus-community-notifications-v7", notificationSeed);
+notifications = notifications.filter((item) => !item.target && item.type !== "comment" && item.type !== "like");
 let activeGroupId = null;
-let activePostId = null;
-let activeTopic = "推荐";
-let composeKind = "分享";
-let composeTopic = "校园生活";
-let composeEmoji = "🌇";
 let mutedGroups = new Set();
 let forumEditMode = false;
 const selectedGroupIds = new Set();
 let toastTimer = null;
+let messageActionId = null;
+let replyTargetId = null;
+let messageSelectionMode = false;
+let forwardMessageIds = [];
+const selectedMessageIds = new Set();
+let messagePressTimer = null;
+let messagePressStart = null;
+let pressedMessageElement = null;
+let suppressMessageClickUntil = 0;
+let chatSwipeStart = null;
+let chatSwipeTriggered = false;
 
 function loadStored(key, fallback) {
   try {
@@ -2565,24 +4566,27 @@ function loadStored(key, fallback) {
 }
 
 function saveGroups() { localStorage.setItem("campus-community-groups-v7", JSON.stringify(groups)); }
-function savePosts() { localStorage.setItem("campus-community-posts-v7", JSON.stringify(posts)); }
 function saveNotifications() { localStorage.setItem("campus-community-notifications-v7", JSON.stringify(notifications)); }
 
 const $ = (selector) => document.querySelector(selector);
 const $$ = (selector) => [...document.querySelectorAll(selector)];
 const groupList = $("#groupList");
 const chatSearchResults = $("#chatSearchResults");
-const postGrid = $("#postGrid");
 const messageList = $("#messageList");
+const chatWallpaper = $(".chat-wallpaper");
 const notificationList = $("#notificationList");
 const chatPage = $("#chatPage");
-const postDetail = $("#postDetail");
-const postModal = $("#postModal");
 const plusActionModal = $("#plusActionModal");
 const newChatModal = $("#newChatModal");
 const mentionPopover = $("#mentionPopover");
 const messageInput = $("#messageInput");
 const toast = $("#toast");
+const messageActionLayer = $("#messageActionLayer");
+const messageActionCluster = $("#messageActionCluster");
+const replyPreview = $("#replyPreview");
+const messageSelectionBar = $("#messageSelectionBar");
+const messageForwardModal = $("#messageForwardModal");
+const messageForwardList = $("#messageForwardList");
 
 function escapeHtml(value) {
   return String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
@@ -2601,14 +4605,13 @@ function showToast(text) {
 
 function showView(viewName) {
   closeChat();
-  closePostDetail();
   closeDrawers();
   document.body.dataset.view = viewName;
   $$(".view").forEach((view) => view.classList.remove("active"));
   $(`#${viewName}View`).classList.add("active");
   $$(".nav-item").forEach((item) => item.classList.toggle("active", item.dataset.view === viewName));
-  animateTabIndicator();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  placeTabIndicator();
+  window.scrollTo(0, 0);
 }
 
 function placeTabIndicator() {
@@ -2619,139 +4622,12 @@ function placeTabIndicator() {
   const active = buttons.find((button) => button.classList.contains("active")) || buttons[0];
   const barRect = bar.getBoundingClientRect();
   const activeRect = active.getBoundingClientRect();
-  const left = activeRect.left - barRect.left - bar.clientLeft;
-  indicator.style.width = `${activeRect.width}px`;
+  const contentRect = active.querySelector(".nav-content")?.getBoundingClientRect();
+  const pillWidth = activeRect.width + 14;
+  const buttonCenter = activeRect.left + activeRect.width / 2 - barRect.left - bar.clientLeft;
+  const left = buttonCenter - pillWidth / 2;
+  indicator.style.width = `${pillWidth}px`;
   indicator.style.transform = `translateX(${left}px)`;
-}
-
-let tabIndicatorFrame = 0;
-function animateTabIndicator() {
-  cancelAnimationFrame(tabIndicatorFrame);
-  const endAt = performance.now() + 420;
-  const tick = () => {
-    placeTabIndicator();
-    if (performance.now() < endAt) {
-      tabIndicatorFrame = requestAnimationFrame(tick);
-    }
-  };
-  tabIndicatorFrame = requestAnimationFrame(tick);
-}
-
-function renderPosts() {
-  const query = $("#postSearch").value.trim().toLowerCase();
-  let visible = posts.filter((post) => {
-    const topicMatch = activeTopic === "推荐" || post.category === activeTopic;
-    const queryMatch = !query || `${post.title} ${post.body} ${post.author} ${post.category}`.toLowerCase().includes(query);
-    return topicMatch && queryMatch;
-  });
-  $("#postFeedTitle").textContent = activeTopic === "推荐" ? "大家正在聊" : activeTopic;
-  $("#postCount").textContent = `${visible.length} 篇`;
-  if (!visible.length) {
-    postGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">没有找到相关帖子<br>换个话题或关键词试试</div>';
-    return;
-  }
-  const columnItems = [[], []];
-  visible.forEach((post, index) => columnItems[index % 2].push(post));
-  const cardMarkup = (post) => `
-    <button class="post-card" data-post="${post.id}">
-      <div class="post-cover ${post.tall ? "tall" : ""}" style="background:${post.gradient}">
-        <span class="cover-emoji">${post.emoji}</span>
-        <span class="cover-caption">${escapeHtml(post.caption)}</span>
-      </div>
-      <div class="post-title">${escapeHtml(post.title)}</div>
-      <div class="post-meta">
-        <span class="post-user"><span class="mini-avatar">${escapeHtml(post.author[0])}</span>${escapeHtml(post.author)}</span>
-        <span class="post-likes">♡ ${post.likes}</span>
-      </div>
-    </button>
-  `;
-  postGrid.innerHTML = columnItems.map((items, index) => `
-    <div class="post-column ${index === 1 ? "offset" : ""}">
-      ${items.map(cardMarkup).join("")}
-    </div>
-  `).join("");
-}
-
-function avatarColor(name) {
-  const colors = ["#4e88de", "#33a781", "#db9144", "#876cd4"];
-  let sum = 0;
-  for (const char of name) sum += char.codePointAt(0);
-  return colors[sum % colors.length];
-}
-
-function openPost(postId) {
-  const post = posts.find((item) => item.id === postId);
-  if (!post) return;
-  activePostId = postId;
-  $("#postDetailBody").innerHTML = `
-    <div class="detail-cover" style="background:${post.gradient}">${post.emoji}</div>
-    <div class="detail-content">
-      <div class="detail-author">
-        <span class="detail-avatar">${escapeHtml(post.author[0])}</span>
-        <div><strong>${escapeHtml(post.author)}</strong><small>${escapeHtml(post.time)} · 校园动态</small></div>
-        ${post.author === "我" ? "" : '<button class="detail-follow">关注</button>'}
-      </div>
-      <h1 class="detail-title">${escapeHtml(post.title)}</h1>
-      <div class="detail-text">${escapeHtml(post.body)}</div>
-      <span class="detail-topic">#${escapeHtml(post.category)}</span>
-      <div class="detail-actions">
-        <button id="likePost" class="${post.liked ? "liked" : ""}">${post.liked ? "♥" : "♡"} ${post.likes}</button>
-        <button>💬 ${post.comments}</button>
-        <button id="savePost">${post.saved ? "★" : "☆"} 收藏</button>
-      </div>
-    </div>
-    <div class="comments-wrap">
-      <h3>评论 ${post.comments}</h3>
-      <div class="comment-list">
-        ${post.replies.map((reply) => `
-          <div class="comment">
-            <span class="comment-avatar">${escapeHtml(reply.author[0])}</span>
-            <div><strong>${escapeHtml(reply.author)}</strong><p>${escapeHtml(reply.text)}</p><small>${escapeHtml(reply.time)}</small></div>
-          </div>
-        `).join("")}
-      </div>
-    </div>
-  `;
-  postDetail.classList.add("open");
-  $("#postDetailBody").scrollTop = 0;
-  bindPostActions(post);
-}
-
-function bindPostActions(post) {
-  $("#likePost").addEventListener("click", () => {
-    post.liked = !post.liked;
-    post.likes += post.liked ? 1 : -1;
-    savePosts();
-    openPost(post.id);
-    renderPosts();
-  });
-  $("#savePost").addEventListener("click", () => {
-    post.saved = !post.saved;
-    savePosts();
-    openPost(post.id);
-    showToast(post.saved ? "已收藏" : "已取消收藏");
-  });
-}
-
-function closePostDetail() {
-  postDetail.classList.remove("open");
-  activePostId = null;
-}
-
-function sendComment() {
-  const input = $("#commentInput");
-  const text = input.value.trim();
-  const post = posts.find((item) => item.id === activePostId);
-  if (!text || !post) return;
-  post.replies.push({ author: "我", text, time: "刚刚" });
-  post.comments += 1;
-  savePosts();
-  input.value = "";
-  openPost(post.id);
-  setTimeout(() => {
-    const body = $("#postDetailBody");
-    body.scrollTop = body.scrollHeight;
-  }, 20);
 }
 
 function renderGroups() {
@@ -2764,19 +4640,27 @@ function renderGroups() {
   groupList.innerHTML = visible.map((group) => {
     const last = [...group.messages].reverse().find((item) => item.text);
     const selected = selectedGroupIds.has(group.id);
+    const unreadMention = getUnreadMention(group.id);
+    const preview = unreadMention
+      ? `<span class="mention-preview-flag">[有人@我]</span> ${escapeHtml(unreadMention.text)}`
+      : `${last?.sender ? `${escapeHtml(last.sender)}: ` : ""}${escapeHtml(last?.text || "")}`;
     return `
       <button class="group-row ${forumEditMode ? "selectable" : ""} ${selected ? "selected" : ""}" data-group="${group.id}" aria-pressed="${selected}">
         ${forumEditMode ? `<span class="select-circle">${selected ? "✓" : ""}</span>` : ""}
         <span class="group-avatar" style="background:${group.color}">${group.icon}</span>
         <span class="group-content">
           <span class="group-name-line"><span class="group-name">${escapeHtml(group.name)}</span><span class="pin-mini">⌖</span></span>
-          <span class="group-preview">${last?.sender ? `${escapeHtml(last.sender)}: ` : ""}${escapeHtml(last?.text || "")}</span>
+          <span class="group-preview">${preview}</span>
         </span>
-        <span class="group-right"><span class="group-time">${group.lastTime}</span>${group.unread ? `<span class="unread-bubble">${group.unread}</span>` : '<span class="unread-bubble quiet">✓</span>'}</span>
+        <span class="group-right"><span class="group-time">${group.lastTime}</span>${group.unread ? `<span class="unread-bubble">${group.unread}</span>` : ""}</span>
       </button>
     `;
   }).join("");
   updateChatNavBadge();
+}
+
+function getUnreadMention(groupId) {
+  return notifications.find((item) => item.type === "mention" && item.group === groupId && item.unread);
 }
 
 function highlightSearch(text, query) {
@@ -2853,12 +4737,19 @@ function setForumEditMode(enabled) {
   selectedGroupIds.clear();
   if (enabled) {
     $("#groupSearch").value = "";
-    renderChatSearch();
+    chatSearchResults.classList.remove("open");
+    chatSearchResults.innerHTML = "";
+    groupList.hidden = false;
   }
   document.body.classList.toggle("forum-editing", enabled);
   $("#editGroupsBtn").textContent = enabled ? "完成" : "编辑";
   updateEditActions();
   renderGroups();
+  const motionClass = enabled ? "edit-shift-right" : "edit-shift-left";
+  groupList.classList.remove("edit-shift-right", "edit-shift-left");
+  void groupList.offsetWidth;
+  groupList.classList.add(motionClass);
+  setTimeout(() => groupList.classList.remove(motionClass), 380);
 }
 
 function toggleGroupSelection(groupId) {
@@ -2867,8 +4758,24 @@ function toggleGroupSelection(groupId) {
   } else {
     selectedGroupIds.add(groupId);
   }
-  renderGroups();
+  const selected = selectedGroupIds.has(groupId);
+  const row = groupList.querySelector(`[data-group="${CSS.escape(groupId)}"]`);
+  if (row) {
+    row.classList.toggle("selected", selected);
+    row.setAttribute("aria-pressed", String(selected));
+    const circle = row.querySelector(".select-circle");
+    if (circle) {
+      circle.classList.toggle("checked", selected);
+      circle.textContent = selected ? "✓" : "";
+    }
+  }
   updateEditActions();
+}
+
+function getMessageReactions(message) {
+  if (Array.isArray(message.reactions)) return message.reactions;
+  const match = message.reaction?.match(/^(.+?)\s+(\d+)$/);
+  return match ? [{ emoji: match[1], count: Number(match[2]) }] : [];
 }
 
 function renderMessages(group) {
@@ -2876,13 +4783,28 @@ function renderMessages(group) {
     if (message.type === "date") return `<div class="date-pill">${escapeHtml(message.text)}</div>`;
     if (message.type === "system") return `<div class="system-message">${escapeHtml(message.text)}</div>`;
     const mine = message.sender === "我";
+    const selected = selectedMessageIds.has(message.id);
+    const reply = message.replyTo
+      ? `<div class="reply-quote"><div><strong>${escapeHtml(message.replyTo.sender)}</strong><span>${escapeHtml(message.replyTo.text)}</span></div></div>`
+      : "";
+    const forwarded = message.forwardedFrom
+      ? `<span class="forwarded-label">转发自 ${escapeHtml(message.forwardedFrom)}</span>`
+      : "";
+    const quickReaction = getMessageReactions(message).map((reaction) =>
+      `<button type="button" class="message-reaction-pill ${reaction.mine ? "active" : ""}" data-quick-reaction="${escapeHtml(reaction.emoji)}" aria-label="${reaction.mine ? "撤销" : "回应"} ${escapeHtml(reaction.emoji)}" aria-pressed="${Boolean(reaction.mine)}">${escapeHtml(reaction.emoji)}<span>${reaction.count}</span></button>`
+    ).join("");
     return `
-      <div class="message ${mine ? "mine" : ""}" data-message-id="${message.id}">
+      <div class="message ${mine ? "mine" : ""} ${selected ? "selected-for-action" : ""}" data-message-id="${message.id}">
         ${mine ? "" : `<span class="message-avatar" style="background:${message.color}">${escapeHtml(message.sender[0])}</span>`}
         <div class="bubble-wrap">
-          <div class="sender-name">${escapeHtml(message.sender)}</div>
-          <div class="bubble">${highlightMentions(message.text)}<span class="message-extra">${escapeHtml(message.time)}</span></div>
-          ${message.reaction ? `<div class="bubble-reaction">${escapeHtml(message.reaction)}</div>` : ""}
+          <div class="bubble">
+            <div class="message-sender-row">${escapeHtml(message.sender)}</div>
+            <div class="message-content">${forwarded}${reply}${highlightMentions(message.text)}</div>
+            <div class="message-card-footer">
+              <div class="message-reactions">${quickReaction}</div>
+              <span class="message-meta"><time class="message-time">${escapeHtml(message.time)}</time></span>
+            </div>
+          </div>
         </div>
       </div>
     `;
@@ -2897,6 +4819,11 @@ function openChat(groupId, focusMessageId = null) {
   const group = groups.find((item) => item.id === groupId);
   if (!group) return;
   activeGroupId = groupId;
+  const unreadMention = getUnreadMention(groupId);
+  if (unreadMention) {
+    unreadMention.unread = false;
+    saveNotifications();
+  }
   group.unread = 0;
   saveGroups();
   renderGroups();
@@ -2910,10 +4837,11 @@ function openChat(groupId, focusMessageId = null) {
   mentionPopover.classList.remove("open");
   renderMessages(group);
   chatPage.classList.add("open");
-  if (focusMessageId) {
+  const messageToFocus = focusMessageId || unreadMention?.messageId;
+  if (messageToFocus) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const target = messageList.querySelector(`[data-message-id="${CSS.escape(focusMessageId)}"]`);
+        const target = messageList.querySelector(`[data-message-id="${CSS.escape(messageToFocus)}"]`);
         if (!target) return;
         target.scrollIntoView({ block: "center" });
         target.classList.add("search-focus");
@@ -2923,23 +4851,302 @@ function openChat(groupId, focusMessageId = null) {
   }
 }
 
-function closeChat() {
-  chatPage.classList.remove("open");
+function finishCloseChat() {
+  chatPage.classList.remove("open", "closing");
   mentionPopover.classList.remove("open");
   activeGroupId = null;
   messageInput.value = "";
+}
+
+function closeChat(animate = false, onClosed = null) {
+  closeMessageActions();
+  clearReplyTarget();
+  exitMessageSelection();
+  closeMessageForward();
+  mentionPopover.classList.remove("open");
+  if (animate && chatPage.classList.contains("open") && !chatPage.classList.contains("closing")) {
+    chatPage.classList.add("closing");
+    setTimeout(() => {
+      finishCloseChat();
+      onClosed?.();
+    }, 300);
+    return;
+  }
+  if (chatPage.classList.contains("closing")) return;
+  finishCloseChat();
+  onClosed?.();
 }
 
 function sendMessage() {
   const group = groups.find((item) => item.id === activeGroupId);
   const text = messageInput.value.trim();
   if (!group || !text) return;
-  group.messages.push({ id: `m${Date.now()}`, sender: "我", text, time: "刚刚" });
+  const replyTarget = group.messages.find((item) => item.id === replyTargetId);
+  const nextMessage = { id: `m${Date.now()}`, sender: "我", text, time: "刚刚" };
+  if (replyTarget) {
+    nextMessage.replyTo = {
+      id: replyTarget.id,
+      sender: replyTarget.sender,
+      text: replyTarget.text
+    };
+  }
+  group.messages.push(nextMessage);
   group.lastTime = "刚刚";
   saveGroups();
   messageInput.value = "";
+  clearReplyTarget();
   renderMessages(group);
   renderGroups();
+}
+
+function getActiveGroup() {
+  return groups.find((item) => item.id === activeGroupId);
+}
+
+function getMessageById(messageId) {
+  return getActiveGroup()?.messages.find((item) => item.id === messageId);
+}
+
+function closeMessageActions(clearTarget = true) {
+  messageActionLayer.classList.remove("open");
+  messageActionLayer.setAttribute("aria-hidden", "true");
+  if (clearTarget) {
+    messageList.querySelectorAll(".message.context-target").forEach((item) => item.classList.remove("context-target"));
+    messageActionId = null;
+  }
+}
+
+function positionMessageActions(messageElement) {
+  const chatRect = chatPage.getBoundingClientRect();
+  const bubbleRect = messageElement.querySelector(".bubble")?.getBoundingClientRect();
+  if (!bubbleRect) return;
+  const clusterWidth = Math.min(306, chatRect.width - 24);
+  const clusterHeight = messageActionCluster.offsetHeight || 390;
+  const left = Math.max(12, Math.min(
+    bubbleRect.left - chatRect.left - 16,
+    chatRect.width - clusterWidth - 12
+  ));
+  const top = Math.max(66, Math.min(
+    bubbleRect.top - chatRect.top - 52,
+    chatRect.height - clusterHeight - 72
+  ));
+  messageActionCluster.style.setProperty("--message-actions-x", `${left}px`);
+  messageActionCluster.style.setProperty("--message-actions-y", `${top}px`);
+}
+
+function openMessageActions(messageId, messageElement) {
+  if (!getMessageById(messageId)) return;
+  if (messageSelectionMode) return;
+  const alreadyOpen = messageActionId === messageId && messageActionLayer.classList.contains("open");
+  if (alreadyOpen) return;
+  closeMessageActions();
+  messageActionId = messageId;
+  messageElement.classList.add("context-target");
+  messageActionLayer.classList.add("open");
+  messageActionLayer.setAttribute("aria-hidden", "false");
+  positionMessageActions(messageElement);
+  requestAnimationFrame(() => positionMessageActions(messageElement));
+}
+
+async function copyText(text) {
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+  } catch {}
+  try {
+    const field = document.createElement("textarea");
+    field.value = text;
+    field.style.position = "fixed";
+    field.style.opacity = "0";
+    document.body.appendChild(field);
+    field.select();
+    const copied = document.execCommand("copy");
+    field.remove();
+    return copied;
+  } catch {
+    return false;
+  }
+}
+
+function applyMessageReaction(messageId, emoji) {
+  const message = getMessageById(messageId);
+  if (!message) return;
+  const reactions = getMessageReactions(message).map((reaction) => ({ ...reaction }));
+  const existing = reactions.find((reaction) => reaction.emoji === emoji);
+  if (existing?.mine) {
+    existing.count -= 1;
+    existing.mine = false;
+    if (existing.count <= 0) reactions.splice(reactions.indexOf(existing), 1);
+  } else if (existing) {
+    existing.count += 1;
+    existing.mine = true;
+  } else {
+    reactions.push({ emoji, count: 1, mine: true });
+  }
+  message.reactions = reactions;
+  message.reaction = reactions.map((reaction) => `${reaction.emoji} ${reaction.count}`).join(" ");
+  saveGroups();
+  renderMessages(getActiveGroup());
+  closeMessageActions();
+}
+
+function setReplyTarget(messageId) {
+  const message = getMessageById(messageId);
+  if (!message) return;
+  replyTargetId = message.id;
+  $("#replyPreviewName").textContent = `回复 ${message.sender}`;
+  $("#replyPreviewText").textContent = message.text;
+  replyPreview.hidden = false;
+  messageInput.focus();
+}
+
+function clearReplyTarget() {
+  replyTargetId = null;
+  replyPreview.hidden = true;
+  $("#replyPreviewName").textContent = "";
+  $("#replyPreviewText").textContent = "";
+}
+
+function speakMessage(message) {
+  if (!("speechSynthesis" in window)) {
+    showToast("当前浏览器不支持朗读");
+    return;
+  }
+  speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(message.text);
+  utterance.lang = "zh-CN";
+  utterance.rate = 1;
+  speechSynthesis.speak(utterance);
+  showToast("正在朗读这条消息");
+}
+
+function syncMessageSelection() {
+  messageList.querySelectorAll(".message[data-message-id]").forEach((item) => {
+    item.classList.toggle("selected-for-action", selectedMessageIds.has(item.dataset.messageId));
+  });
+  $("#messageSelectionCount").textContent = `已选择 ${selectedMessageIds.size} 条`;
+}
+
+function enterMessageSelection(messageId) {
+  messageSelectionMode = true;
+  selectedMessageIds.clear();
+  if (messageId) selectedMessageIds.add(messageId);
+  chatPage.classList.add("message-selecting");
+  messageSelectionBar.setAttribute("aria-hidden", "false");
+  syncMessageSelection();
+}
+
+function exitMessageSelection() {
+  messageSelectionMode = false;
+  selectedMessageIds.clear();
+  chatPage.classList.remove("message-selecting");
+  messageSelectionBar.setAttribute("aria-hidden", "true");
+  messageList.querySelectorAll(".message.selected-for-action").forEach((item) => item.classList.remove("selected-for-action"));
+}
+
+function toggleMessageSelection(messageId) {
+  if (selectedMessageIds.has(messageId)) selectedMessageIds.delete(messageId);
+  else selectedMessageIds.add(messageId);
+  if (!selectedMessageIds.size) exitMessageSelection();
+  else syncMessageSelection();
+}
+
+function deleteMessages(messageIds) {
+  const group = getActiveGroup();
+  if (!group || !messageIds.size) return;
+  group.messages = group.messages.filter((message) => !messageIds.has(message.id));
+  if (replyTargetId && messageIds.has(replyTargetId)) clearReplyTarget();
+  exitMessageSelection();
+  closeMessageActions();
+  saveGroups();
+  renderMessages(group);
+  renderGroups();
+  showToast(`已删除 ${messageIds.size} 条消息`);
+}
+
+function openMessageForward(messageIds) {
+  forwardMessageIds = [...new Set(messageIds)].filter((id) => getMessageById(id));
+  if (!forwardMessageIds.length) return;
+  closeMessageActions();
+  messageForwardList.innerHTML = groups.map((group) => `
+    <button type="button" data-forward-group="${escapeHtml(group.id)}">
+      <span class="message-forward-avatar" style="background:${group.color}">${escapeHtml(group.icon)}</span>
+      <span><strong>${escapeHtml(group.name)}</strong><span>${group.members} 位成员</span></span>
+    </button>
+  `).join("");
+  messageForwardModal.classList.add("open");
+}
+
+function closeMessageForward() {
+  messageForwardModal.classList.remove("open");
+  forwardMessageIds = [];
+}
+
+function forwardMessagesToGroup(groupId) {
+  const sourceGroup = getActiveGroup();
+  const targetGroup = groups.find((group) => group.id === groupId);
+  if (!sourceGroup || !targetGroup || !forwardMessageIds.length) return;
+  const sourceMessages = sourceGroup.messages.filter((message) => forwardMessageIds.includes(message.id));
+  if (!sourceMessages.length) return;
+  sourceMessages.forEach((message, index) => {
+    targetGroup.messages.push({
+      id: `f${Date.now()}-${index}`,
+      sender: "我",
+      text: message.text,
+      time: "刚刚",
+      forwardedFrom: message.sender
+    });
+  });
+  targetGroup.lastTime = "刚刚";
+  targetGroup.unread = 0;
+  saveGroups();
+  renderGroups();
+  if (activeGroupId === targetGroup.id) renderMessages(targetGroup);
+  const count = sourceMessages.length;
+  exitMessageSelection();
+  closeMessageForward();
+  showToast(`已转发 ${count} 条消息到 ${targetGroup.name}`);
+}
+
+function handleMessageAction(action) {
+  const message = getMessageById(messageActionId);
+  if (!message || !action) return;
+  if (action === "reply") {
+    setReplyTarget(message.id);
+    closeMessageActions();
+    return;
+  }
+  if (action === "copy") {
+    copyText(message.text).then((copied) => {
+      closeMessageActions();
+      showToast(copied ? "消息已拷贝" : "拷贝失败，请重试");
+    });
+    return;
+  }
+  if (action === "speak") {
+    speakMessage(message);
+    closeMessageActions();
+    return;
+  }
+  if (action === "forward") {
+    openMessageForward([message.id]);
+    return;
+  }
+  if (action === "report") {
+    closeMessageActions();
+    showToast("已提交举报，管理员会核查");
+    return;
+  }
+  if (action === "delete") {
+    deleteMessages(new Set([message.id]));
+    return;
+  }
+  if (action === "select") {
+    enterMessageSelection(message.id);
+    closeMessageActions();
+  }
 }
 
 function insertMention(mention) {
@@ -2952,9 +5159,13 @@ function insertMention(mention) {
 }
 
 function updateBadges() {
-  const count = notifications.filter((item) => item.unread).length;
-  $("#notifyBadge").textContent = count;
-  $("#notifyBadge").classList.toggle("hide", count === 0);
+  const count = notifications.filter((item) => item.unread && item.type !== "mention").length;
+  ["#settingsNotifyBadge"].forEach((selector) => {
+    const badge = $(selector);
+    if (!badge) return;
+    badge.textContent = count;
+    badge.classList.toggle("hide", count === 0);
+  });
 }
 
 function updateChatNavBadge() {
@@ -2968,8 +5179,8 @@ function updateChatNavBadge() {
 function renderNotifications() {
   const colors = { comment: "#ff6b7f", like: "#ff8a4c", mention: "#4d83df", system: "#737b86" };
   const icons = { comment: "💬", like: "♥", mention: "@", system: "i" };
-  notificationList.innerHTML = notifications.map((item) => `
-    <button class="notification-item ${item.unread ? "unread" : ""}" ${item.group ? `data-notify-group="${item.group}"` : item.target ? `data-notify-post="${item.target}"` : ""}>
+  notificationList.innerHTML = notifications.filter((item) => item.type !== "mention").map((item) => `
+    <button class="notification-item ${item.unread ? "unread" : ""}" ${item.group ? `data-notify-group="${item.group}"` : ""}>
       <span class="notify-icon" style="background:${colors[item.type]}">${icons[item.type]}</span>
       <span class="notification-copy"><strong>${escapeHtml(item.title)}</strong><p>${escapeHtml(item.text)}</p></span>
       <span class="notification-time">${escapeHtml(item.time)}</span>
@@ -2981,26 +5192,37 @@ function renderNotifications() {
 function openDrawer(id) {
   $$(".drawer.open").forEach((drawer) => drawer.classList.remove("open"));
   document.getElementById(id).classList.add("open");
+  if (id === "notificationDrawer") {
+    document.body.classList.add("depth-stack");
+  } else if (!newChatModal.classList.contains("open") && !plusActionModal.classList.contains("open")) {
+    document.body.classList.remove("depth-stack");
+  }
   $("#drawerScrim").classList.add("show");
 }
 
 function closeDrawers() {
   $$(".drawer.open").forEach((drawer) => drawer.classList.remove("open"));
   $("#drawerScrim").classList.remove("show");
+  if (!newChatModal.classList.contains("open") && !plusActionModal.classList.contains("open")) {
+    document.body.classList.remove("depth-stack");
+  }
 }
 
 function closePlusAction() {
   plusActionModal.classList.remove("open");
+  if (!newChatModal.classList.contains("open")) document.body.classList.remove("depth-stack");
 }
 
 function openNewChat() {
   $("#newChatSearch").value = "";
   $$("#newChatOptions button").forEach((button) => (button.style.display = "flex"));
   newChatModal.classList.add("open");
+  document.body.classList.add("depth-stack");
 }
 
 function closeNewChat() {
   newChatModal.classList.remove("open");
+  if (!plusActionModal.classList.contains("open")) document.body.classList.remove("depth-stack");
 }
 
 function openPlusAction(action) {
@@ -3102,65 +5324,11 @@ function openPlusAction(action) {
     });
   }
   plusActionModal.classList.add("open");
-}
-
-function resetPostComposer() {
-  composeKind = "分享";
-  composeTopic = "校园生活";
-  composeEmoji = "🌇";
-  $("#newPostTitle").value = "";
-  $("#newPostContent").value = "";
-  $$("#postKindTabs button").forEach((button) => button.classList.toggle("active", button.dataset.kind === composeKind));
-  $$("#composeTopics button").forEach((button) => button.classList.toggle("active", button.dataset.topic === composeTopic));
-  $$("#emojiChoices button").forEach((button) => button.classList.toggle("active", button.dataset.emoji === composeEmoji));
-}
-
-function gradientFor(topic) {
-  return {
-    "校园生活": "linear-gradient(145deg,#ff916e,#ffc587)",
-    "学习互助": "linear-gradient(145deg,#7198ef,#aac8ff)",
-    "宿舍日常": "linear-gradient(145deg,#48b394,#a8ead4)",
-    "随便聊聊": "linear-gradient(145deg,#b788d8,#e2c4f2)"
-  }[topic] || "linear-gradient(145deg,#8a9bb2,#c8d4e1)";
-}
-
-function publishPost() {
-  const title = $("#newPostTitle").value.trim();
-  const body = $("#newPostContent").value.trim();
-  if (!title || !body) {
-    showToast("先写标题和内容");
-    return;
-  }
-  posts.unshift({
-    id: `p${Date.now()}`, kind: composeKind, category: composeTopic, title, body,
-    emoji: composeEmoji, gradient: gradientFor(composeTopic), caption: composeKind === "提问" ? "求解答" : "新分享",
-    author: "我", likes: 0, comments: 0, tall: title.length > 24, liked: false, saved: false,
-    time: "刚刚", replies: []
-  });
-  savePosts();
-  postModal.classList.remove("open");
-  activeTopic = "推荐";
-  $$("#postTopics .topic-chip").forEach((button) => button.classList.toggle("active", button.dataset.topic === "推荐"));
-  $("#postSearch").value = "";
-  renderPosts();
-  showView("posts");
-  showToast(composeKind === "提问" ? "问题已发布" : "帖子已发布");
+  document.body.classList.add("depth-stack");
 }
 
 $$(".nav-item").forEach((button) => button.addEventListener("click", () => showView(button.dataset.view)));
-$$("#postTopics .topic-chip").forEach((button) => {
-  button.addEventListener("click", () => {
-    activeTopic = button.dataset.topic;
-    $$("#postTopics .topic-chip").forEach((item) => item.classList.toggle("active", item === button));
-    renderPosts();
-  });
-});
-$("#postSearch").addEventListener("input", renderPosts);
 $("#groupSearch").addEventListener("input", renderChatSearch);
-$("#postGrid").addEventListener("click", (event) => {
-  const card = event.target.closest("[data-post]");
-  if (card) openPost(card.dataset.post);
-});
 $("#groupList").addEventListener("click", (event) => {
   const row = event.target.closest("[data-group]");
   if (!row) return;
@@ -3176,35 +5344,44 @@ chatSearchResults.addEventListener("click", (event) => {
   openChat(result.dataset.searchGroup, result.dataset.messageId || null);
 });
 
-$("#publishBtn").addEventListener("click", () => {
-  resetPostComposer();
-  postModal.classList.add("open");
-  setTimeout(() => $("#newPostTitle").focus(), 80);
+$("#backToForum").addEventListener("click", () => {
+  closeChat(true, () => showView("forum"));
 });
-$("#cancelPost").addEventListener("click", () => postModal.classList.remove("open"));
-$("#submitPost").addEventListener("click", publishPost);
-postModal.addEventListener("click", (event) => { if (event.target === postModal) postModal.classList.remove("open"); });
-$$("#postKindTabs button").forEach((button) => button.addEventListener("click", () => {
-  composeKind = button.dataset.kind;
-  $$("#postKindTabs button").forEach((item) => item.classList.toggle("active", item === button));
-}));
-$$("#composeTopics button").forEach((button) => button.addEventListener("click", () => {
-  composeTopic = button.dataset.topic;
-  $$("#composeTopics button").forEach((item) => item.classList.toggle("active", item === button));
-}));
-$$("#emojiChoices button").forEach((button) => button.addEventListener("click", () => {
-  composeEmoji = button.dataset.emoji;
-  $$("#emojiChoices button").forEach((item) => item.classList.toggle("active", item === button));
-}));
 
-$("#backToPosts").addEventListener("click", closePostDetail);
-$("#sendComment").addEventListener("click", sendComment);
-$("#commentInput").addEventListener("keydown", (event) => { if (event.key === "Enter") sendComment(); });
-$("#postMoreBtn").addEventListener("click", () => showToast("后续可以加入分享、举报和举报记录"));
+chatWallpaper.addEventListener("pointerdown", (event) => {
+  if (!chatPage.classList.contains("open") || messageSelectionMode) return;
+  if (event.target.closest(".message, button, a, input, textarea")) return;
+  chatSwipeStart = { x: event.clientX, y: event.clientY };
+  chatSwipeTriggered = false;
+});
 
-$("#backToForum").addEventListener("click", () => { closeChat(); showView("forum"); });
+chatWallpaper.addEventListener("pointermove", (event) => {
+  if (!chatSwipeStart || chatSwipeTriggered) return;
+  const deltaX = event.clientX - chatSwipeStart.x;
+  const deltaY = event.clientY - chatSwipeStart.y;
+  if (Math.abs(deltaY) > 18 && Math.abs(deltaY) > Math.abs(deltaX)) {
+    resetChatSwipe();
+    return;
+  }
+  if (deltaX > -18 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+  event.preventDefault();
+  if (deltaX > -72) return;
+  chatSwipeTriggered = true;
+  navigator.vibrate?.(10);
+  closeChat(true, () => showView("forum"));
+});
+
+function resetChatSwipe() {
+  chatSwipeStart = null;
+  chatSwipeTriggered = false;
+}
+
+document.addEventListener("pointerup", resetChatSwipe, { passive: true });
+document.addEventListener("pointercancel", resetChatSwipe, { passive: true });
+
 $("#sendMessage").addEventListener("click", sendMessage);
 $("#mentionBtn").addEventListener("click", () => mentionPopover.classList.toggle("open"));
+$("#cancelReply").addEventListener("click", clearReplyTarget);
 mentionPopover.addEventListener("click", (event) => {
   const button = event.target.closest("[data-mention]");
   if (button) insertMention(button.dataset.mention);
@@ -3216,6 +5393,104 @@ messageInput.addEventListener("keydown", (event) => {
   }
 });
 $$("[data-stub]").forEach((button) => button.addEventListener("click", () => showToast(`${button.dataset.stub}功能会在下一版接入`)));
+
+messageList.addEventListener("pointerdown", (event) => {
+  if (messageSelectionMode || (event.pointerType === "mouse" && event.button !== 0)) return;
+  const messageElement = event.target.closest(".message[data-message-id]");
+  if (!messageElement) return;
+  clearTimeout(messagePressTimer);
+  pressedMessageElement = messageElement;
+  messagePressStart = { x: event.clientX, y: event.clientY };
+  messageElement.classList.add("message-pressing");
+  const messageId = messageElement.dataset.messageId;
+  messagePressTimer = setTimeout(() => {
+    messagePressTimer = null;
+    pressedMessageElement?.classList.remove("message-pressing");
+    pressedMessageElement = null;
+    messagePressStart = null;
+    suppressMessageClickUntil = Date.now() + 700;
+    navigator.vibrate?.(12);
+    openMessageActions(messageId, messageElement);
+  }, 480);
+});
+
+document.addEventListener("pointermove", (event) => {
+  if (!messagePressStart) return;
+  const distance = Math.hypot(event.clientX - messagePressStart.x, event.clientY - messagePressStart.y);
+  if (distance > 10) cancelMessagePress();
+}, { passive: true });
+
+document.addEventListener("pointerup", cancelMessagePress, { passive: true });
+document.addEventListener("pointercancel", cancelMessagePress, { passive: true });
+
+function cancelMessagePress() {
+  clearTimeout(messagePressTimer);
+  messagePressTimer = null;
+  messagePressStart = null;
+  pressedMessageElement?.classList.remove("message-pressing");
+  pressedMessageElement = null;
+}
+
+messageList.addEventListener("contextmenu", (event) => {
+  const messageElement = event.target.closest(".message[data-message-id]");
+  if (!messageElement || messageSelectionMode) return;
+  event.preventDefault();
+  cancelMessagePress();
+  suppressMessageClickUntil = Date.now() + 700;
+  openMessageActions(messageElement.dataset.messageId, messageElement);
+});
+
+messageList.addEventListener("click", (event) => {
+  if (Date.now() < suppressMessageClickUntil) return;
+  const messageElement = event.target.closest(".message[data-message-id]");
+  if (!messageElement) return;
+  if (messageSelectionMode) {
+    event.preventDefault();
+    toggleMessageSelection(messageElement.dataset.messageId);
+    return;
+  }
+  const quickReaction = event.target.closest("[data-quick-reaction]");
+  if (quickReaction) {
+    event.preventDefault();
+    applyMessageReaction(messageElement.dataset.messageId, quickReaction.dataset.quickReaction);
+    return;
+  }
+});
+
+messageActionLayer.addEventListener("click", (event) => {
+  if (event.target.closest("[data-close-message-actions]")) {
+    closeMessageActions();
+    return;
+  }
+  const reaction = event.target.closest("[data-message-reaction]");
+  if (reaction && messageActionId) {
+    applyMessageReaction(messageActionId, reaction.dataset.messageReaction);
+    return;
+  }
+  const action = event.target.closest("[data-message-action]");
+  if (action) handleMessageAction(action.dataset.messageAction);
+});
+
+$("#messageReactionMore").addEventListener("click", () => showToast("更多表情会继续补充"));
+$("#cancelMessageSelection").addEventListener("click", exitMessageSelection);
+$("#deleteSelectedMessages").addEventListener("click", () => deleteMessages(new Set(selectedMessageIds)));
+$("#forwardSelectedMessages").addEventListener("click", () => openMessageForward([...selectedMessageIds]));
+
+messageForwardList.addEventListener("click", (event) => {
+  const target = event.target.closest("[data-forward-group]");
+  if (target) forwardMessagesToGroup(target.dataset.forwardGroup);
+});
+$("#closeMessageForward").addEventListener("click", closeMessageForward);
+messageForwardModal.addEventListener("click", (event) => {
+  if (event.target === messageForwardModal) closeMessageForward();
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.key !== "Escape") return;
+  if (messageForwardModal.classList.contains("open")) closeMessageForward();
+  else if (messageActionLayer.classList.contains("open")) closeMessageActions();
+  else if (messageSelectionMode) exitMessageSelection();
+});
 
 $("#chatInfoBtn").addEventListener("click", () => {
   const group = groups.find((item) => item.id === activeGroupId);
@@ -3241,33 +5516,23 @@ $("#chatMuteBtn").addEventListener("click", () => {
 });
 $("#infoMuteToggle").addEventListener("click", () => $("#chatMuteBtn").click());
 
-$("#notifyBtn").addEventListener("click", () => openDrawer("notificationDrawer"));
+$("#settingsNotificationsBtn").addEventListener("click", () => openDrawer("notificationDrawer"));
 $("#markAllRead").addEventListener("click", () => {
-  notifications = notifications.map((item) => ({ ...item, unread: false }));
+  notifications = notifications.map((item) => item.type === "mention" ? item : { ...item, unread: false });
   saveNotifications();
   renderNotifications();
   showToast("通知已全部标为已读");
 });
 notificationList.addEventListener("click", (event) => {
   const groupItem = event.target.closest("[data-notify-group]");
-  const postItem = event.target.closest("[data-notify-post]");
   if (groupItem) {
     closeDrawers();
     showView("forum");
     openChat(groupItem.dataset.notifyGroup);
-  } else if (postItem) {
-    closeDrawers();
-    showView("posts");
-    openPost(postItem.dataset.notifyPost);
   }
 });
 $$(".close-btn").forEach((button) => button.addEventListener("click", closeDrawers));
 $("#drawerScrim").addEventListener("click", closeDrawers);
-$("#forumAddBtn").addEventListener("click", () => {
-  resetPostComposer();
-  postModal.classList.add("open");
-  setTimeout(() => $("#newPostTitle").focus(), 80);
-});
 $("#forumComposeBtn").addEventListener("click", openNewChat);
 $("#closeNewChat").addEventListener("click", closeNewChat);
 newChatModal.addEventListener("click", (event) => {
@@ -3314,25 +5579,18 @@ $("#confirmDelete").addEventListener("click", () => {
   showToast(`已删除 ${count} 个群聊`);
 });
 
-$$("[data-my]").forEach((button) => button.addEventListener("click", () => {
-  showToast(button.dataset.my === "posts" ? "我的帖子会在正式版单独筛选" : "这个功能将在下一版接入");
-}));
-$$(".menu-card button").forEach((button) => button.addEventListener("click", () => {
+$$(".menu-card button:not(#settingsNotificationsBtn)").forEach((button) => button.addEventListener("click", () => {
   showToast("设置页会在正式版接入");
 }));
 
-renderPosts();
 renderGroups();
 renderNotifications();
-$("#myPostCount").textContent = posts.filter((post) => post.author === "我").length;
 
 const liquidGlassSelector = [
-  ".appbar", ".search-box", ".telegram-search", ".post-card", ".group-list",
+  ".appbar", ".telegram-search", ".group-list",
   ".telegram-header", ".chat-header", ".pinned-bar", ".chat-composer",
-  ".detail-header", ".comment-bar", ".bottom-nav", ".edit-action-bar button",
-  ".edit-pill", ".circle-action", ".compose-action", ".topic-chip",
-  ".my-shortcuts button", ".menu-card", ".drawer", ".new-chat-panel",
-  ".post-sheet", ".plus-action-sheet", ".delete-dialog", ".send-btn",
+  ".edit-action-bar button", ".edit-pill", ".circle-action", ".compose-action",
+  ".menu-card", ".drawer", ".new-chat-panel", ".plus-action-sheet", ".delete-dialog", ".send-btn",
   ".mention-popover", ".chat-search-results"
 ].join(",");
 
